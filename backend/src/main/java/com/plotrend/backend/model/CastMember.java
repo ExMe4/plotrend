@@ -17,8 +17,13 @@ public class CastMember {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 1024)
     private String actorName;
+
+    @Column(length = 1024)
     private String characterName;
+
+    @Column(length = 512)
     private String imageUrl;
     private Integer startSeason;
     private Integer endSeason;
