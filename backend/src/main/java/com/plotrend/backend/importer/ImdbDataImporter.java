@@ -4,6 +4,7 @@ import com.plotrend.backend.model.*;
 import com.plotrend.backend.repository.*;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -11,11 +12,16 @@ import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 @Component
+@Profile("import")
 public class ImdbDataImporter implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        runImport();
+        if (tvShowRepo.count() == 0) {
+            runImport();
+        } else {
+            System.out.println("Skipping IMDb import: Database is already populated.");
+        }
     }
 
     private final TVShowRepository tvShowRepo;
