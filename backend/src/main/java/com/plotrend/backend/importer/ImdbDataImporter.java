@@ -4,7 +4,6 @@ import com.plotrend.backend.model.*;
 import com.plotrend.backend.repository.*;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -12,7 +11,6 @@ import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 @Component
-@Profile("import")
 public class ImdbDataImporter implements ApplicationRunner {
 
     @Override
@@ -70,8 +68,13 @@ public class ImdbDataImporter implements ApplicationRunner {
                 show.setStartYear(parseInt(startYear));
                 show.setEndYear(parseInt(endYear));
 
-                tvShowRepo.save(show);
-                showMap.put(tconst, show);
+                TVShow existing = tvShowRepo.findByImdbId(tconst);
+                if (existing == null) {
+                    tvShowRepo.save(show);
+                    showMap.put(tconst, show);
+                } else {
+                    showMap.put(tconst, existing);
+                }
             }
         }
 
@@ -119,7 +122,9 @@ public class ImdbDataImporter implements ApplicationRunner {
                 episode.setRating(ratingMap.getOrDefault(tconst, 0.0));
                 episode.setDescription(null); // optional, can be fetched later
 
-                episodeRepo.save(episode);
+                if (!episodeRepo.existsByImdbId(tconst)) {
+                    episodeRepo.save(episode);
+                }
             }
         }
     }
@@ -149,7 +154,10 @@ public class ImdbDataImporter implements ApplicationRunner {
                 member.setActorName(nconst); // name can be resolved from name.basics.tsv.gz later
                 member.setCharacterName(cleanCharacter(characters));
                 member.setTvShow(show);
-                castRepo.save(member);
+
+                if (!castRepo.existsByActorNameAndTvShow(member.getActorName(), show)) {
+                    castRepo.save(member);
+                }
             }
         }
     }

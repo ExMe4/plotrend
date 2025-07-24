@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TVShowRepository extends JpaRepository<TVShow, Long> {
+    boolean existsByImdbId(String imdbId);
+    TVShow findByImdbId(String imdbId);
 }

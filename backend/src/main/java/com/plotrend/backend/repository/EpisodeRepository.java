@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface EpisodeRepository extends JpaRepository<Episode, Long> {
+    boolean existsByImdbId(String imdbId);
     List<Episode> findByTvShowId(Long tvShowId);
 }
