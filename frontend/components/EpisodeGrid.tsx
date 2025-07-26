@@ -1,10 +1,4 @@
-export default function EpisodeGrid() {
-  const episodes = [
-    { title: "Pilot", rating: 9.0 },
-    { title: "Cat's in the Bag...", rating: 8.7 },
-    { title: "...And the Bag's in the River", rating: 8.8 },
-  ];
-
+export default function EpisodeGrid({ episodes }: { episodes: any[] }) {
   return (
     <div className="grid grid-cols-3 gap-4">
       {episodes.map((ep, i) => (

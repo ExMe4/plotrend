@@ -1,8 +1,19 @@
-export default function EpisodeTable() {
-  const episodes = [
-    { title: "Pilot", airDate: "2008-01-20", description: "Walter starts cooking meth." },
-    { title: "Cat's in the Bag...", airDate: "2008-01-27", description: "Disposing of bodies." },
-  ];
+"use client";
+import { useEffect, useState } from "react";
+import { getEpisodes } from "@/lib/api";
+
+export default function EpisodeTable({ showId }: { showId: string | number }) {
+  const [episodes, setEpisodes] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getEpisodes(showId)
+      .then((data) => setEpisodes(data))
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
+  }, [showId]);
+
+  if (loading) return <p>Loading episodes...</p>;
 
   return (
     <div>
