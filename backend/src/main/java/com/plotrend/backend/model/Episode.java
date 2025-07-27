@@ -1,5 +1,6 @@
 package com.plotrend.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,5 +29,6 @@ public class Episode {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tv_show_id")
+    @JsonIgnore
     private TVShow tvShow;
 }

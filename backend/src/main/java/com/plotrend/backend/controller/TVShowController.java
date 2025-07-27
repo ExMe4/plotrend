@@ -7,7 +7,6 @@ import com.plotrend.backend.repository.TVShowRepository;
 import com.plotrend.backend.repository.EpisodeRepository;
 import com.plotrend.backend.repository.CastMemberRepository;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -45,5 +44,10 @@ public class TVShowController {
     @GetMapping("/{id}/cast")
     public List<CastMember> getCastByShowId(@PathVariable Long id) {
         return castMemberRepository.findByTvShowId(id);
+    }
+
+    @GetMapping("/slug/{slug}")
+    public TVShow getShowBySlug(@PathVariable String slug) {
+        return tvShowRepository.findBySlug(slug).orElse(null);
     }
 }

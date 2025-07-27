@@ -26,6 +26,7 @@ public class TVShow {
     private Integer endYear;
     private String coverImageUrl;
     private String imdbId;
+    private String slug;
 
     @OneToMany(mappedBy = "tvShow", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Episode> episodes;
