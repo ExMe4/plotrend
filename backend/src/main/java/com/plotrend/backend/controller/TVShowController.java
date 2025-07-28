@@ -1,16 +1,17 @@
 package com.plotrend.backend.controller;
 
-import com.plotrend.backend.model.TVShow;
-import com.plotrend.backend.model.Episode;
-import com.plotrend.backend.model.CastMember;
+import com.plotrend.backend.dto.TVShowDTO;
+import com.plotrend.backend.dto.EpisodeDTO;
+import com.plotrend.backend.dto.CastMemberDTO;
 import com.plotrend.backend.repository.TVShowRepository;
 import com.plotrend.backend.repository.EpisodeRepository;
 import com.plotrend.backend.repository.CastMemberRepository;
+
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000") // frontend dev port
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/shows")
 public class TVShowController {
 
@@ -27,27 +28,73 @@ public class TVShowController {
     }
 
     @GetMapping
-    public List<TVShow> getAllShows() {
-        return tvShowRepository.findAll();
+    public List<TVShowDTO> getAllShows() {
+        return tvShowRepository.findAll().stream()
+                .map(show -> new TVShowDTO(
+                        show.getId(),
+                        show.getTitle(),
+                        show.getStartYear(),
+                        show.getEndYear(),
+                        show.getCoverImageUrl(),
+                        show.getSlug()
+                ))
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public TVShow getShowById(@PathVariable Long id) {
-        return tvShowRepository.findById(id).orElse(null);
+    public TVShowDTO getShowById(@PathVariable Long id) {
+        return tvShowRepository.findById(id)
+                .map(show -> new TVShowDTO(
+                        show.getId(),
+                        show.getTitle(),
+                        show.getStartYear(),
+                        show.getEndYear(),
+                        show.getCoverImageUrl(),
+                        show.getSlug()
+                ))
+                .orElse(null);
     }
 
     @GetMapping("/{id}/episodes")
-    public List<Episode> getEpisodesByShowId(@PathVariable Long id) {
-        return episodeRepository.findByTvShowId(id);
+    public List<EpisodeDTO> getEpisodesByShowId(@PathVariable Long id) {
+        return episodeRepository.findByTvShowId(id).stream()
+                .map(ep -> new EpisodeDTO(
+                        ep.getId(),
+                        ep.getSeasonNumber(),
+                        ep.getEpisodeNumber(),
+                        ep.getAirDate(),
+                        ep.getRating(),
+                        ep.getDescription(),
+                        ep.getImdbId()
+                ))
+                .toList();
     }
 
     @GetMapping("/{id}/cast")
-    public List<CastMember> getCastByShowId(@PathVariable Long id) {
-        return castMemberRepository.findByTvShowId(id);
+    public List<CastMemberDTO> getCastByShowId(@PathVariable Long id) {
+        return castMemberRepository.findByTvShowId(id).stream()
+                .map(cm -> new CastMemberDTO(
+                        cm.getId(),
+                        cm.getActorName(),
+                        cm.getCharacterName(),
+                        cm.getImageUrl(),
+                        cm.getStartSeason(),
+                        cm.getEndSeason()
+                ))
+                .toList();
     }
 
     @GetMapping("/slug/{slug}")
-    public TVShow getShowBySlug(@PathVariable String slug) {
-        return tvShowRepository.findBySlug(slug).orElse(null);
+    public TVShowDTO getShowBySlug(@PathVariable String slug) {
+        return tvShowRepository.findBySlug(slug)
+                .map(show -> new TVShowDTO(
+                        show.getId(),
+                        show.getTitle(),
+                        show.getStartYear(),
+                        show.getEndYear(),
+                        show.getCoverImageUrl(),
+                        show.getSlug()
+                ))
+                .orElse(null);
     }
 }
