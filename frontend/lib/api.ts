@@ -21,3 +21,9 @@ export async function getCast(showId: string | number) {
   if (!res.ok) throw new Error("Failed to fetch cast");
   return res.json();
 }
+
+export async function searchShows(query: string) {
+  const res = await fetch(`http://localhost:8080/api/shows/search?q=${encodeURIComponent(query)}`);
+  if (!res.ok) throw new Error("Failed to search shows");
+  return res.json();
+}
