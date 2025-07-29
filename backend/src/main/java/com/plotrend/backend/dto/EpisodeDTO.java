@@ -8,6 +8,7 @@ public class EpisodeDTO {
     private Integer episodeNumber;
     private LocalDate airDate;
     private Double rating;
+    private String title;
     private String description;
     private String imdbId;
 
@@ -17,6 +18,7 @@ public class EpisodeDTO {
         this.episodeNumber = episodeNumber;
         this.airDate = airDate;
         this.rating = rating;
+        this.title = title;
         this.description = description;
         this.imdbId = imdbId;
     }
@@ -26,6 +28,7 @@ public class EpisodeDTO {
     public Integer getEpisodeNumber() { return episodeNumber; }
     public LocalDate getAirDate() { return airDate; }
     public Double getRating() { return rating; }
+    public String getTitle() { return title; }
     public String getDescription() { return description; }
     public String getImdbId() { return imdbId; }
 }

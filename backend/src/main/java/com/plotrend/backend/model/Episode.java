@@ -24,6 +24,7 @@ public class Episode {
     private Integer episodeNumber;
     private LocalDate airDate;
     private Double rating;
+    private String title;
     private String description;
     private String imdbId;
 
