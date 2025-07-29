@@ -41,6 +41,20 @@ public class TVShowController {
                 .toList();
     }
 
+    @GetMapping("/search")
+    public List<TVShowDTO> searchShows(@RequestParam String q) {
+        return tvShowRepository.findByTitleContainingIgnoreCase(q).stream()
+                .map(show -> new TVShowDTO(
+                        show.getId(),
+                        show.getTitle(),
+                        show.getStartYear(),
+                        show.getEndYear(),
+                        show.getCoverImageUrl(),
+                        show.getSlug()
+                ))
+                .toList();
+    }
+
     @GetMapping("/{id}")
     public TVShowDTO getShowById(@PathVariable Long id) {
         return tvShowRepository.findById(id)
