@@ -44,6 +44,7 @@ public class TVShowController {
     @GetMapping("/search")
     public List<TVShowDTO> searchShows(@RequestParam String q) {
         return tvShowRepository.findByTitleContainingIgnoreCase(q).stream()
+                .limit(18)
                 .map(show -> new TVShowDTO(
                         show.getId(),
                         show.getTitle(),
