@@ -22,6 +22,12 @@ export default function ShowDetails({ id }: { id: string }) {
           getCast(id),
         ]);
         setShow(showData);
+        epData.sort((a, b) => {
+          if (a.seasonNumber !== b.seasonNumber) {
+            return a.seasonNumber - b.seasonNumber;
+          }
+          return a.episodeNumber - b.episodeNumber;
+        });
         setEpisodes(epData);
         setCast(castData);
       } catch (err) {
