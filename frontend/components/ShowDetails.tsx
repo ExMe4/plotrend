@@ -21,13 +21,17 @@ export default function ShowDetails({ id }: { id: string }) {
           getEpisodes(id),
           getCast(id),
         ]);
+
         setShow(showData);
+
+        // Sort all episodes by season & episode number
         epData.sort((a, b) => {
           if (a.seasonNumber !== b.seasonNumber) {
             return a.seasonNumber - b.seasonNumber;
           }
           return a.episodeNumber - b.episodeNumber;
         });
+
         setEpisodes(epData);
         setCast(castData);
       } catch (err) {
@@ -43,9 +47,16 @@ export default function ShowDetails({ id }: { id: string }) {
   if (loading) return <p className="p-6">Loading...</p>;
   if (!show) return <p className="p-6">Show not found.</p>;
 
+  const ratedEpisodes = episodes.filter(
+    (ep) => ep.rating !== null && ep.rating !== undefined && ep.rating > 0
+  );
+
   const averageRating =
-    episodes.length > 0
-      ? (episodes.reduce((sum, ep) => sum + (ep.rating || 0), 0) / episodes.length).toFixed(2)
+    ratedEpisodes.length > 0
+      ? (
+          ratedEpisodes.reduce((sum, ep) => sum + ep.rating, 0) /
+          ratedEpisodes.length
+        ).toFixed(2)
       : "N/A";
 
   return (
@@ -75,9 +86,9 @@ export default function ShowDetails({ id }: { id: string }) {
           <RatingToggle view={view} setView={setView} />
           <div className="mt-6">
             {view === "grid" ? (
-              <EpisodeGrid episodes={episodes} />
+              <EpisodeGrid episodes={ratedEpisodes} />
             ) : (
-              <RatingGraph episodes={episodes} />
+              <RatingGraph episodes={ratedEpisodes} />
             )}
           </div>
         </div>
