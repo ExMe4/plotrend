@@ -78,6 +78,7 @@ export default function EpisodeGrid({ episodes }: { episodes: any[] }) {
                   <td
                     key={ep.id}
                     style={getRatingStyle(ep.rating ?? 0)}
+                    title={`S${ep.seasonNumber}E${ep.episodeNumber}: ${ep.title}\n${ep.airDate}`}
                     className="w-12 h-12 text-xs font-bold text-center align-middle rounded"
                   >
                     {ep.rating?.toFixed(1) ?? "N/A"}

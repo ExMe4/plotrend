@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PLotrend",
+  title: "Plotrend",
 };
 
 export default function RootLayout({
