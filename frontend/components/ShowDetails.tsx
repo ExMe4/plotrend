@@ -13,6 +13,31 @@ export default function ShowDetails({ id }: { id: string }) {
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<"grid" | "graph">("grid");
 
+  function getAERStyle(rating: number): string {
+    if (rating >= 9.5) {
+      return "text-purple-700";
+    }
+
+    if (rating >= 8.5) {
+      return "text-green-700";
+    }
+
+    if (rating >= 8.0) {
+      return "text-green-600";
+    }
+
+    if (rating >= 7.0) {
+      return "text-yellow-500";
+    }
+
+    if (rating >= 5.0) {
+      return "text-yellow-600";
+    }
+
+    return "text-red-600";
+  }
+
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -64,6 +89,7 @@ export default function ShowDetails({ id }: { id: string }) {
       <div className="max-w-5xl mx-auto p-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row gap-6 items-start">
+          {/* Cover Image */}
           <Image
             src={show.coverImageUrl || "/placeholder.jpg"}
             alt={show.title}
@@ -71,13 +97,47 @@ export default function ShowDetails({ id }: { id: string }) {
             height={300}
             className="rounded-lg shadow"
           />
-          <div>
-            <h1 className="text-3xl font-bold mb-2">{show.title}</h1>
-            <p className="text-gray-600 mb-1">
-              {show.startYear} – {show.endYear || "Ongoing"}
-            </p>
-            <p className="text-gray-700 mb-1">IMDb Rating: {show.rating}</p>
-            <p className="text-gray-700">Average Episode Rating: {averageRating}</p>
+
+          {/* Show Info and Ratings */}
+          <div className="flex flex-col md:flex-row justify-between w-full">
+            {/* Title and Years */}
+            <div className="mb-4 md:mb-0">
+              <h1 className="text-3xl font-bold mb-2">{show.title}</h1>
+              <p className="text-gray-600 mb-1">
+                {show.startYear} – {show.endYear || "Ongoing"}
+              </p>
+            </div>
+
+            {/* Ratings Display */}
+            <div className="flex gap-10 md:ml-auto mt-4 md:mt-0 items-center">
+              {/* IMDb Rating */}
+              <div className="text-center">
+                <div className="pt-6 text-[5.5rem] leading-none font-tall font-bold text-black tracking-tighter scale-y-[1.3] scale-x-[0.8] origin-bottom">
+                  {show.rating || "N/A"}
+                </div>
+                <div className="text-xs text-gray-600 flex items-center justify-center gap-1 mt-1">
+                  IMDb Rating
+                  <div className="relative group cursor-pointer">
+                  </div>
+                </div>
+              </div>
+
+              {/* Average Episode Rating */}
+              <div className="text-center">
+                <div className={`pt-6 text-[5.5rem] leading-none font-tall font-bold tracking-tighter scale-y-[1.3] scale-x-[0.8] origin-bottom ${getAERStyle(Number(averageRating))}`}>
+                  {averageRating}
+                </div>
+                <div className="text-xs text-gray-600 flex items-center justify-center gap-1 mt-1">
+                  AER
+                  <div className="relative group cursor-pointer">
+                    <span className="text-[10px] bg-gray-300 rounded-full w-4 h-4 flex items-center justify-center font-semibold">i</span>
+                    <div className="absolute bottom-full mb-2 w-52 text-[10px] text-white bg-black rounded p-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                      AER stands for "Average Episode Rating" and is calculated by averaging all episodes with a rating.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
