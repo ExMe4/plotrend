@@ -1,11 +1,12 @@
 "use client";
-import React from "react";
+import React, { useRef, useState } from "react";
+import TooltipPortal from "./TooltipPortal";
 
 function getRatingStyle(rating: number): React.CSSProperties {
   if (rating >= 9.8) {
     // Purple gradient: 9.8 = bright, 10 = dark
     const percent = (rating - 9.8) / 0.2;
-    const purple = Math.floor(255 - percent * 55); // 255 → 200
+    const purple = Math.floor(255 - percent * 55);
     return {
       backgroundColor: `rgb(${purple}, ${purple * 0.6}, 255)`,
       boxShadow: "0 0 6px rgba(150, 0, 255, 0.4)",
@@ -16,7 +17,7 @@ function getRatingStyle(rating: number): React.CSSProperties {
   if (rating >= 8.0) {
     // Green gradient: 8.0 = bright, 9.7 = dark
     const percent = (rating - 8.0) / (9.7 - 8.0);
-    const green = Math.floor(255 - percent * 75); // 255 → 180
+    const green = Math.floor(255 - percent * 75);
     return {
       backgroundColor: `rgb(0, ${green}, 100)`,
       color: "#fff",
@@ -35,8 +36,8 @@ function getRatingStyle(rating: number): React.CSSProperties {
 
   // Red gradient: 0 = dark, 4.9 = bright
   const percent = rating / 4.9;
-  const green = Math.floor(50 + percent * 50); // 50 → 100
-  const red = Math.floor(200 + percent * 55);  // 200 → 255
+  const green = Math.floor(50 + percent * 50);
+  const red = Math.floor(200 + percent * 55);
   return {
     backgroundColor: `rgb(${red}, ${green}, ${green / 2})`,
     color: "#fff",
@@ -74,14 +75,32 @@ export default function EpisodeGrid({ episodes }: { episodes: any[] }) {
                 if (!ep) {
                   return <td key={i} className="w-12 h-12"></td>;
                 }
+
+                const [hovered, setHovered] = useState(false);
+                const cellRef = useRef<HTMLTableCellElement>(null);
+
                 return (
                   <td
                     key={ep.id}
+                    ref={cellRef}
+                    onMouseEnter={() => setHovered(true)}
+                    onMouseLeave={() => setHovered(false)}
                     style={getRatingStyle(ep.rating ?? 0)}
-                    title={`S${ep.seasonNumber}E${ep.episodeNumber}: ${ep.title}\n${ep.airDate}`}
-                    className="w-12 h-12 text-xs font-bold text-center align-middle rounded"
+                    className="w-12 h-12 text-xs font-bold text-center align-middle rounded relative group cursor-pointer"
                   >
                     {ep.rating?.toFixed(1) ?? "N/A"}
+
+                    {hovered && (
+                      <TooltipPortal targetRef={cellRef}>
+                        <div className="bg-white text-black text-[10px] p-2 rounded border border-blue-500 shadow-md max-w-xs whitespace-nowrap">
+                          <div className="font-semibold mb-1">
+                            S{ep.seasonNumber}E{ep.episodeNumber}
+                          </div>
+                          <div className="text-gray-700">{ep.airDate}</div>
+                          <div className="mt-1 font-medium">{ep.title}</div>
+                        </div>
+                      </TooltipPortal>
+                    )}
                   </td>
                 );
               })}
