@@ -14,14 +14,15 @@ export async function GET(
   }
 
   const data = await res.json();
+
   return NextResponse.json(
-    data.cast.slice(0, 12).map((c: any) => ({
+    data.cast?.slice(0, 12).map((c: any) => ({
       id: c.id,
       actorName: c.name,
       characterName: c.roles?.[0]?.character ?? "",
       imageUrl: c.profile_path
         ? `https://image.tmdb.org/t/p/w185${c.profile_path}`
         : null,
-    }))
+    })) ?? []
   );
 }

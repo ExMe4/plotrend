@@ -14,6 +14,7 @@ export async function GET(
   }
 
   const data = await res.json();
+
   return NextResponse.json({
     id: data.id,
     title: data.name,
@@ -23,13 +24,5 @@ export async function GET(
     startYear: data.first_air_date?.split("-")[0] ?? null,
     endYear: data.status === "Ended" ? data.last_air_date?.split("-")[0] : null,
     rating: data.vote_average ? data.vote_average.toFixed(1) : null,
-    cast: data.aggregate_credits?.cast?.slice(0, 12).map((c: any) => ({
-      id: c.id,
-      actorName: c.name,
-      characterName: c.roles?.[0]?.character ?? "",
-      imageUrl: c.profile_path
-        ? `https://image.tmdb.org/t/p/w185${c.profile_path}`
-        : null,
-    })),
   });
 }
