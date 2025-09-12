@@ -23,14 +23,14 @@ export default function CastList({ showId }: { showId: string | number }) {
         {cast.map((c, i) => (
           <div key={i} className="text-center">
             <Image
-              src={c.image || "/placeholder-cast.jpg"}
-              alt={c.name}
+              src={c.imageUrl || "/placeholder-cast.jpg"}
+              alt={c.actorName}
               width={80}
               height={80}
               className="rounded-full"
             />
-            <p className="text-sm font-semibold">{c.name}</p>
-            <p className="text-xs text-gray-500">{c.character}</p>
+            <p className="text-sm font-semibold">{c.actorName}</p>
+            <p className="text-xs text-gray-500">{c.characterName}</p>
           </div>
         ))}
       </div>
