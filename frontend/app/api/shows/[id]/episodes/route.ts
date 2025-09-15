@@ -19,8 +19,11 @@ export async function GET(
 
   const show = await showRes.json();
 
-  // For each season, fetch its episodes
-  const seasonRequests = show.seasons.map((s: any) =>
+  // Filter out season 0 (specials)
+  const validSeasons = show.seasons.filter((s: any) => s.season_number > 0);
+
+  // For each valid season, fetch its episodes
+  const seasonRequests = validSeasons.map((s: any) =>
     fetch(
       `https://api.themoviedb.org/3/tv/${params.id}/season/${s.season_number}?api_key=${process.env.TMDB_KEY}`,
       { next: { revalidate: 86400 } }
