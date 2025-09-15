@@ -4,29 +4,43 @@ export async function GET(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const res = await fetch(
-    `https://api.themoviedb.org/3/tv/${params.id}?api_key=${process.env.TMDB_KEY}&append_to_response=episodes`,
+  // Fetch all seasons first
+  const showRes = await fetch(
+    `https://api.themoviedb.org/3/tv/${params.id}?api_key=${process.env.TMDB_KEY}`,
     { next: { revalidate: 86400 } }
   );
 
-  if (!res.ok) {
-    return NextResponse.json({ error: "Failed to fetch episodes" }, { status: 500 });
+  if (!showRes.ok) {
+    return NextResponse.json(
+      { error: "Failed to fetch show details" },
+      { status: 500 }
+    );
   }
 
-  const data = await res.json();
+  const show = await showRes.json();
 
-  // TMDB episodes are grouped by seasons
-  const episodes = data.seasons?.flatMap((season: any) =>
-    (season.episodes || []).map((ep: any) => ({
+  // For each season, fetch its episodes
+  const seasonRequests = show.seasons.map((s: any) =>
+    fetch(
+      `https://api.themoviedb.org/3/tv/${params.id}/season/${s.season_number}?api_key=${process.env.TMDB_KEY}`,
+      { next: { revalidate: 86400 } }
+    ).then((res) => res.json())
+  );
+
+  const seasonData = await Promise.all(seasonRequests);
+
+  // Flatten all episodes
+  const episodes = seasonData.flatMap((season) =>
+    season.episodes.map((ep: any) => ({
       id: ep.id,
+      seasonNumber: season.season_number,
+      episodeNumber: ep.episode_number,
       title: ep.name,
       description: ep.overview,
-      rating: ep.vote_average || null,
-      seasonNumber: ep.season_number,
-      episodeNumber: ep.episode_number,
       airDate: ep.air_date,
+      rating: ep.vote_average ? Number(ep.vote_average.toFixed(1)) : null,
     }))
   );
 
-  return NextResponse.json(episodes || []);
+  return NextResponse.json(episodes);
 }
