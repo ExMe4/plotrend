@@ -7,6 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import EpisodeTooltip from "./EpisodeTooltip";
 
 // Season color palette
 const seasonColors = [
@@ -18,6 +19,23 @@ const seasonColors = [
   "#a855f7", // purple
   "#14b8a6", // teal
 ];
+
+function CustomTooltip({ active, payload }: any) {
+  if (active && payload && payload.length) {
+    const ep = payload[0].payload;
+    return (
+      <div className="bg-white p-2 border rounded shadow text-xs">
+        <div className="font-semibold">
+          S{ep.seasonNumber}E{ep.episodeNumber}
+        </div>
+        <div className="text-gray-500">{ep.airDate}</div>
+        <div className="text-gray-700">{ep.title}</div>
+        <div className="mt-1">Rating: {ep.rating ?? "N/A"}</div>
+      </div>
+    );
+  }
+  return null;
+}
 
 export default function RatingGraph({ episodes }: { episodes: any[] }) {
   // Sort episodes
@@ -36,6 +54,10 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
       name: `S${ep.seasonNumber}E${ep.episodeNumber}`,
       rating: ep.rating ?? null,
       season: ep.seasonNumber,
+      title: ep.title,
+      airDate: ep.airDate,
+      seasonNumber: ep.seasonNumber,
+      episodeNumber: ep.episodeNumber,
     };
     // Add season-specific rating key (e.g., season1, season2...)
     seasonNumbers.forEach((sNum, idx) => {
@@ -84,7 +106,14 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
                 height={40}
               />
               <YAxis domain={[0, 10]} ticks={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} />
-              <Tooltip />
+
+              <Tooltip content={({ active, payload }) => {
+                if (active && payload && payload.length) {
+                  const ep = payload[0].payload;
+                  return <EpisodeTooltip ep={ep} />;
+                }
+                return null;
+              }} />
 
               {/* Main continuous line */}
               <Line

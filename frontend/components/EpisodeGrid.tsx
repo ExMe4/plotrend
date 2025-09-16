@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useState } from "react";
 import TooltipPortal from "./TooltipPortal";
+import EpisodeTooltip from "./EpisodeTooltip";
 
 function getRatingStyle(rating: number): React.CSSProperties {
   if (rating >= 9.8) {
@@ -92,13 +93,7 @@ export default function EpisodeGrid({ episodes }: { episodes: any[] }) {
 
                     {hovered && (
                       <TooltipPortal targetRef={cellRef}>
-                        <div className="bg-white text-black text-[10px] p-2 rounded border border-blue-500 shadow-md max-w-xs whitespace-nowrap">
-                          <div className="font-semibold mb-1">
-                            S{ep.seasonNumber}E{ep.episodeNumber}
-                          </div>
-                          <div className="text-gray-700">{ep.airDate}</div>
-                          <div className="mt-1 font-medium">{ep.title}</div>
-                        </div>
+                        <EpisodeTooltip ep={ep} />
                       </TooltipPortal>
                     )}
                   </td>
