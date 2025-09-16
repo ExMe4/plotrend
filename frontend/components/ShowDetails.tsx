@@ -110,13 +110,13 @@ export default function ShowDetails({ id }: { id: string }) {
 
             {/* Ratings Display */}
             <div className="flex gap-10 md:ml-auto mt-4 md:mt-0 items-center">
-              {/* IMDb Rating */}
+              {/* TMDB Rating */}
               <div className="text-center">
                 <div className="pt-6 text-[5.5rem] leading-none font-tall font-bold text-black tracking-tighter scale-y-[1.3] scale-x-[0.8] origin-bottom">
                   {show.rating || "N/A"}
                 </div>
                 <div className="text-xs text-gray-600 flex items-center justify-center gap-1 mt-1">
-                  IMDb Rating
+                  TMDB Rating
                   <div className="relative group cursor-pointer">
                   </div>
                 </div>
@@ -170,6 +170,16 @@ export default function ShowDetails({ id }: { id: string }) {
             </div>
           ))}
         </div>
+
+        {/* Synopsis Section */}
+        {show.overview && (
+          <div className="mt-12">
+            <h2 className="text-2xl font-semibold mb-4">Synopsis</h2>
+            <p className="text-gray-800 text-sm leading-relaxed max-w-5xl mx-auto">
+              {show.overview}
+            </p>
+          </div>
+        )}
 
         {/* Episode Table */}
         <h2 className="text-2xl font-semibold mt-12 mb-4">Episodes</h2>

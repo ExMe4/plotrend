@@ -4,8 +4,10 @@ export async function GET(
   req: Request,
   { params }: { params: { id: string } }
 ) {
+  const { id } = params;
+
   const res = await fetch(
-    `https://api.themoviedb.org/3/tv/${params.id}?api_key=${process.env.TMDB_KEY}&append_to_response=aggregate_credits`,
+    `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.TMDB_KEY}&append_to_response=aggregate_credits`,
     { next: { revalidate: 86400 } }
   );
 
@@ -18,6 +20,7 @@ export async function GET(
   return NextResponse.json({
     id: data.id,
     title: data.name,
+    overview: data.overview,
     coverImageUrl: data.poster_path
       ? `https://image.tmdb.org/t/p/w500${data.poster_path}`
       : null,
