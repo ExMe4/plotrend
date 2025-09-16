@@ -54,7 +54,7 @@ export default function EpisodeGrid({ episodes }: { episodes: any[] }) {
   const maxEpisodes = Math.max(...Object.values(seasons).map((eps) => eps.length));
 
   return (
-    <div className="overflow-auto">
+    <div className="overflow-auto flex justify-center">
       <table className="table-fixed border-separate border-spacing-1">
         <thead>
           <tr>
