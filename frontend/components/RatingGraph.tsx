@@ -91,8 +91,8 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
 
   return (
       <div className="w-full flex justify-center">
-        <div className="w-full h-80">
-          <ResponsiveContainer>
+        <div className="w-[1600px] h-[600px]">
+            <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data}>
               <XAxis
                 dataKey="name"
@@ -105,7 +105,13 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
                 textAnchor="middle"
                 height={40}
               />
-              <YAxis domain={[0, 10]} ticks={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} />
+              <YAxis
+                domain={[0, 10]}
+                ticks={Array.from({ length: 21 }, (_, i) => i * 0.5)}
+                tickFormatter={(val) => (Number.isInteger(val) ? val.toString() : "")}
+                allowDecimals={true}
+              />
+
 
               <Tooltip content={({ active, payload }) => {
                 if (active && payload && payload.length) {
@@ -120,7 +126,7 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
                 type="monotone"
                 dataKey="rating"
                 stroke="#ccc"
-                strokeWidth={2}
+                strokeWidth={5}
                 dot={false}
                 isAnimationActive={false}
               />
@@ -132,7 +138,7 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
                   type="monotone"
                   dataKey={`season${seasonNum}`}
                   stroke={seasonColors[(seasonNum - 1) % seasonColors.length]}
-                  strokeWidth={2}
+                  strokeWidth={5}
                   dot={false}
                   isAnimationActive={false}
                 />

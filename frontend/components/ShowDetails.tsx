@@ -144,7 +144,7 @@ export default function ShowDetails({ id }: { id: string }) {
         {/* Toggle & View */}
         <div className="mt-10">
           <RatingToggle view={view} setView={setView} />
-          <div className="mt-6">
+          <div className="mt-6 -mx-6">
             {view === "grid" ? (
               <EpisodeGrid episodes={ratedEpisodes} />
             ) : (
