@@ -81,12 +81,23 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
 
   // X-axis labels
   const seasonLabels: { index: number; label: string }[] = [];
+
   seasonNumbers.forEach((season) => {
     const indices = data
       .map((d, i) => (d.season === season ? i : -1))
       .filter((i) => i !== -1);
     const mid = Math.floor((indices[0] + indices[indices.length - 1]) / 2);
-    seasonLabels.push({ index: mid, label: `Season ${season}` });
+
+    let label: string;
+    if (seasonNumbers.length < 10) {
+      label = `Season ${season}`;
+    } else if (seasonNumbers.length <= 25) {
+      label = `S${season}`;
+    } else {
+      label = `${season}`;
+    }
+
+    seasonLabels.push({ index: mid, label });
   });
 
   return (
@@ -126,7 +137,7 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
                 type="monotone"
                 dataKey="rating"
                 stroke="#ccc"
-                strokeWidth={5}
+                strokeWidth={4}
                 dot={false}
                 isAnimationActive={false}
               />
@@ -138,7 +149,7 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
                   type="monotone"
                   dataKey={`season${seasonNum}`}
                   stroke={seasonColors[(seasonNum - 1) % seasonColors.length]}
-                  strokeWidth={5}
+                  strokeWidth={4}
                   dot={false}
                   isAnimationActive={false}
                 />
