@@ -191,8 +191,13 @@ export default function ShowDetails({ id }: { id: string }) {
 
               {/* TMDB Rating */}
               <div className="text-center">
-                <div className="pt-6 text-[5.5rem] leading-none font-tall font-bold text-black tracking-tighter scale-y-[1.3] scale-x-[0.8] origin-bottom">
-                  {show.rating || "N/A"}
+                <div className="relative inline-block">
+                  <div className="pt-6 text-[5.5rem] leading-none font-tall font-bold text-black tracking-tighter scale-y-[1.3] scale-x-[0.8] origin-bottom">
+                    {show.rating || "N/A"}
+                  </div>
+                  {show.rating && (
+                    <span className="absolute bottom-0 right-0 text-xs text-gray-500">/10</span>
+                  )}
                 </div>
                 <div className="text-xs text-gray-600 flex items-center justify-center gap-1 mt-1">
                   TMDB Rating
@@ -201,12 +206,17 @@ export default function ShowDetails({ id }: { id: string }) {
 
               {/* Average Episode Rating */}
               <div className="text-center">
-                <div
-                  className={`pt-6 text-[5.5rem] leading-none font-tall font-bold tracking-tighter scale-y-[1.3] scale-x-[0.8] origin-bottom ${getAERStyle(
-                    Number(averageRating)
-                  )}`}
-                >
-                  {averageRating}
+                <div className="relative inline-block">
+                  <div
+                    className={`pt-6 text-[5.5rem] leading-none font-tall font-bold tracking-tighter scale-y-[1.3] scale-x-[0.8] origin-bottom ${getAERStyle(
+                      Number(averageRating)
+                    )}`}
+                  >
+                    {averageRating}
+                  </div>
+                  {averageRating !== "N/A" && (
+                    <span className="absolute bottom-0 right-0 text-xs text-gray-500">/10</span>
+                  )}
                 </div>
                 <div className="text-xs text-gray-600 flex items-center justify-center gap-1 mt-1">
                   AER
