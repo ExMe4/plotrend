@@ -246,6 +246,140 @@ export default function ShowDetails({ id }: { id: string }) {
           </div>
         </div>
 
+        {/* Highlights Section */}
+        {ratedEpisodes.length > 0 && (
+          <div className="mt-12">
+            <h2 className="text-2xl font-semibold mb-6">Highlights</h2>
+            <div className="flex flex-col gap-4">
+
+              {/* Best Episode */}
+              {(() => {
+                const bestEp = ratedEpisodes.reduce((max, ep) =>
+                  ep.rating > max.rating ? ep : max
+                );
+                return (
+                  <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
+                    <div className="bg-purple-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
+                      Best Episode
+                    </div>
+                    <div className="bg-purple-100 text-purple-800 px-4 py-3 flex-1">
+                      <span className="font-semibold">
+                        S{bestEp.seasonNumber}E{bestEp.episodeNumber} - {bestEp.title}
+                      </span>
+                      <span className="ml-2">({bestEp.rating.toFixed(1)}/10)</span>
+                      <div className="text-sm text-purple-600 mt-1">
+                        {bestEp.airDate}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Worst Episode */}
+              {(() => {
+                const worstEp = ratedEpisodes.reduce((min, ep) =>
+                  ep.rating < min.rating ? ep : min
+                );
+                return (
+                  <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
+                    <div className="bg-red-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
+                      Worst Episode
+                    </div>
+                    <div className="bg-red-100 text-red-800 px-4 py-3 flex-1">
+                      <span className="font-semibold">
+                        S{worstEp.seasonNumber}E{worstEp.episodeNumber} - {worstEp.title}
+                      </span>
+                      <span className="ml-2">({worstEp.rating.toFixed(1)}/10)</span>
+                      <div className="text-sm text-red-600 mt-1">
+                        {worstEp.airDate}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Best & Worst Season */}
+              {(() => {
+                const grouped = episodes.reduce((acc: any, ep) => {
+                  if (ep.rating) {
+                    if (!acc[ep.seasonNumber]) acc[ep.seasonNumber] = [];
+                    acc[ep.seasonNumber].push(ep);
+                  }
+                  return acc;
+                }, {});
+
+                const seasons = Object.keys(grouped).map((s) => {
+                  const eps = grouped[s];
+                  const avg =
+                    eps.reduce((sum, ep) => sum + ep.rating, 0) / eps.length;
+
+                  // Extract just years
+                  const firstYear = eps[0].airDate ? new Date(eps[0].airDate).getFullYear() : null;
+                  const lastYear = eps[eps.length - 1].airDate
+                    ? new Date(eps[eps.length - 1].airDate).getFullYear()
+                    : null;
+
+                  let yearLabel = "";
+                  if (firstYear && lastYear) {
+                    yearLabel = firstYear === lastYear ? `${firstYear}` : `${firstYear}–${lastYear}`;
+                  }
+
+                  return {
+                    season: Number(s),
+                    avg,
+                    yearLabel,
+                  };
+                });
+
+                if (seasons.length <= 1) return null;
+
+                const bestSeason = seasons.reduce((max, s) =>
+                  s.avg > max.avg ? s : max
+                );
+                const worstSeason = seasons.reduce((min, s) =>
+                  s.avg < min.avg ? s : min
+                );
+
+                return (
+                  <>
+                    {/* Best Season */}
+                    <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
+                      <div className="bg-green-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
+                        Best Season
+                      </div>
+                      <div className="bg-green-100 text-green-800 px-4 py-3 flex-1">
+                        <span className="font-semibold">Season {bestSeason.season}</span>
+                        <span className="ml-2">({bestSeason.avg.toFixed(2)}/10)</span>
+                        {bestSeason.yearLabel && (
+                          <div className="text-sm text-green-600 mt-1">
+                            {bestSeason.yearLabel}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Worst Season */}
+                    <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
+                      <div className="bg-red-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
+                        Worst Season
+                      </div>
+                      <div className="bg-red-100 text-red-800 px-4 py-3 flex-1">
+                        <span className="font-semibold">Season {worstSeason.season}</span>
+                        <span className="ml-2">({worstSeason.avg.toFixed(2)}/10)</span>
+                        {worstSeason.yearLabel && (
+                          <div className="text-sm text-red-600 mt-1">
+                            {worstSeason.yearLabel}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
+          </div>
+        )}
+
         {/* Cast Section */}
         <h2 className="text-2xl font-semibold mt-12 mb-4">Cast</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
