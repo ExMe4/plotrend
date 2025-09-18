@@ -37,6 +37,13 @@ export default function ShowDetails({ id }: { id: string }) {
     return "text-red-600";
   }
 
+  function getPopularityStyle(pop: number): string {
+    if (pop >= 200) return "text-purple-700";
+    if (pop >= 140) return "text-green-800";
+    if (pop >= 100) return "text-green-600";
+    if (pop >= 50) return "text-yellow-500";
+    return "text-red-600";
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -100,16 +107,88 @@ export default function ShowDetails({ id }: { id: string }) {
 
           {/* Show Info and Ratings */}
           <div className="flex flex-col md:flex-row justify-between w-full">
+
             {/* Title and Years */}
             <div className="mb-4 md:mb-0">
               <h1 className="text-3xl font-bold mb-2">{show.title}</h1>
-              <p className="text-gray-600 mb-1">
+
+              {/* Status Button */}
+              {show.status && (
+                <div className="mt-2 mb-2">
+                  <span
+                    className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                      ["Ended", "Canceled", "Cancelled"].includes(show.status)
+                        ? "bg-red-100 text-red-700"
+                        : "bg-green-100 text-green-700"
+                    }`}
+                  >
+                    {show.status}
+                  </span>
+                </div>
+              )}
+
+              <p className="text-gray-600 mb-2">
                 {show.startYear} – {show.endYear || "Ongoing"}
               </p>
+
+              {/* Episode Count */}
+              {show.episodeCount && (
+                <p className="text-gray-600 mb-1">{show.episodeCount} Episodes</p>
+              )}
+
+              {/* Runtime */}
+              {show.runtime && <p className="text-gray-700">{show.runtime} min</p>}
+
+              {/* Networks */}
+              {show.networks?.length > 0 && (
+                <div className="flex flex-wrap gap-3 mt-3">
+                  {show.networks.map((net: any) =>
+                    net.logoUrl ? (
+                      <Image
+                        key={net.id}
+                        src={net.logoUrl}
+                        alt={net.name}
+                        width={70}
+                        height={40}
+                        className="object-contain bg-white p-1 rounded shadow"
+                      />
+                    ) : (
+                      <span key={net.id} className="text-sm text-gray-700">
+                        {net.name}
+                      </span>
+                    )
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Ratings Display */}
             <div className="flex gap-10 md:ml-auto mt-4 md:mt-0 items-center">
+
+              {/* Popularity */}
+              <div className="text-center">
+                <div
+                  className={`pt-6 text-[5.5rem] leading-none font-tall font-bold tracking-tighter scale-y-[1.3] scale-x-[0.8] origin-bottom ${getPopularityStyle(
+                    Math.round(show.popularity)
+                  )}`}
+                >
+                  {show.popularity ? Math.round(show.popularity) : "N/A"}
+                </div>
+                <div className="text-xs text-gray-600 flex items-center justify-center gap-1 mt-1">
+                  Popularity
+                  <div className="relative group cursor-pointer">
+                    <span className="text-[10px] bg-gray-300 rounded-full w-4 h-4 flex items-center justify-center font-semibold">
+                      i
+                    </span>
+                    <div className="absolute bottom-full mb-2 w-60 text-[12px] text-white bg-black rounded p-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                      Popularity is a TMDB metric that combines page views, search traffic,
+                      votes, and trending activity. It’s dynamic and updates daily. The
+                      higher the number is, the more popular the show is
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* TMDB Rating */}
               <div className="text-center">
                 <div className="pt-6 text-[5.5rem] leading-none font-tall font-bold text-black tracking-tighter scale-y-[1.3] scale-x-[0.8] origin-bottom">
@@ -117,21 +196,25 @@ export default function ShowDetails({ id }: { id: string }) {
                 </div>
                 <div className="text-xs text-gray-600 flex items-center justify-center gap-1 mt-1">
                   TMDB Rating
-                  <div className="relative group cursor-pointer">
-                  </div>
                 </div>
               </div>
 
               {/* Average Episode Rating */}
               <div className="text-center">
-                <div className={`pt-6 text-[5.5rem] leading-none font-tall font-bold tracking-tighter scale-y-[1.3] scale-x-[0.8] origin-bottom ${getAERStyle(Number(averageRating))}`}>
+                <div
+                  className={`pt-6 text-[5.5rem] leading-none font-tall font-bold tracking-tighter scale-y-[1.3] scale-x-[0.8] origin-bottom ${getAERStyle(
+                    Number(averageRating)
+                  )}`}
+                >
                   {averageRating}
                 </div>
                 <div className="text-xs text-gray-600 flex items-center justify-center gap-1 mt-1">
                   AER
                   <div className="relative group cursor-pointer">
-                    <span className="text-[10px] bg-gray-300 rounded-full w-4 h-4 flex items-center justify-center font-semibold">i</span>
-                    <div className="absolute bottom-full mb-2 w-52 text-[10px] text-white bg-black rounded p-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                    <span className="text-[10px] bg-gray-300 rounded-full w-4 h-4 flex items-center justify-center font-semibold">
+                      i
+                    </span>
+                    <div className="absolute bottom-full mb-2 w-52 text-[12px] text-white bg-black rounded p-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                       AER stands for "Average Episode Rating" and is calculated by averaging all episodes with a rating.
                     </div>
                   </div>

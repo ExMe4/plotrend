@@ -27,5 +27,16 @@ export async function GET(
     startYear: data.first_air_date?.split("-")[0] ?? null,
     endYear: data.status === "Ended" ? data.last_air_date?.split("-")[0] : null,
     rating: data.vote_average ? data.vote_average.toFixed(1) : null,
+    popularity: data.popularity ? data.popularity.toFixed(1) : null,
+    status: data.status,
+    runtime: data.episode_run_time?.[0] ?? null,
+    episodeCount: data.number_of_episodes ?? null,
+    networks: data.networks?.map((n: any) => ({
+      id: n.id,
+      name: n.name,
+      logoUrl: n.logo_path
+        ? `https://image.tmdb.org/t/p/w154${n.logo_path}`
+        : null,
+    })) ?? [],
   });
 }
