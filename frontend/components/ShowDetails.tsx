@@ -14,7 +14,7 @@ export default function ShowDetails({ id }: { id: string }) {
   const [view, setView] = useState<"grid" | "graph">("grid");
 
   function getAERStyle(rating: number): string {
-    if (rating >= 9.5) {
+    if (rating >= 9.0) {
       return "text-purple-700";
     }
 
@@ -26,7 +26,11 @@ export default function ShowDetails({ id }: { id: string }) {
       return "text-green-600";
     }
 
-    if (rating >= 7.0) {
+    if (rating >= 7.5) {
+      return "text-green-500";
+    }
+
+    if (rating >= 6.0) {
       return "text-yellow-500";
     }
 
