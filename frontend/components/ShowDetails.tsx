@@ -267,9 +267,7 @@ export default function ShowDetails({ id }: { id: string }) {
                         S{bestEp.seasonNumber}E{bestEp.episodeNumber} - {bestEp.title}
                       </span>
                       <span className="ml-2">({bestEp.rating.toFixed(1)}/10)</span>
-                      <div className="text-sm text-purple-600 mt-1">
-                        {bestEp.airDate}
-                      </div>
+                      <div className="text-sm text-purple-600 mt-1">{bestEp.airDate}</div>
                     </div>
                   </div>
                 );
@@ -290,9 +288,7 @@ export default function ShowDetails({ id }: { id: string }) {
                         S{worstEp.seasonNumber}E{worstEp.episodeNumber} - {worstEp.title}
                       </span>
                       <span className="ml-2">({worstEp.rating.toFixed(1)}/10)</span>
-                      <div className="text-sm text-red-600 mt-1">
-                        {worstEp.airDate}
-                      </div>
+                      <div className="text-sm text-red-600 mt-1">{worstEp.airDate}</div>
                     </div>
                   </div>
                 );
@@ -324,25 +320,16 @@ export default function ShowDetails({ id }: { id: string }) {
                     yearLabel = firstYear === lastYear ? `${firstYear}` : `${firstYear}–${lastYear}`;
                   }
 
-                  return {
-                    season: Number(s),
-                    avg,
-                    yearLabel,
-                  };
+                  return { season: Number(s), avg, yearLabel };
                 });
 
                 if (seasons.length <= 1) return null;
 
-                const bestSeason = seasons.reduce((max, s) =>
-                  s.avg > max.avg ? s : max
-                );
-                const worstSeason = seasons.reduce((min, s) =>
-                  s.avg < min.avg ? s : min
-                );
+                const bestSeason = seasons.reduce((max, s) => (s.avg > max.avg ? s : max));
+                const worstSeason = seasons.reduce((min, s) => (s.avg < min.avg ? s : min));
 
                 return (
                   <>
-                    {/* Best Season */}
                     <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
                       <div className="bg-green-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
                         Best Season
@@ -351,9 +338,7 @@ export default function ShowDetails({ id }: { id: string }) {
                         <span className="font-semibold">Season {bestSeason.season}</span>
                         <span className="ml-2">({bestSeason.avg.toFixed(2)}/10)</span>
                         {bestSeason.yearLabel && (
-                          <div className="text-sm text-green-600 mt-1">
-                            {bestSeason.yearLabel}
-                          </div>
+                          <div className="text-sm text-green-600 mt-1">{bestSeason.yearLabel}</div>
                         )}
                       </div>
                     </div>
@@ -367,12 +352,86 @@ export default function ShowDetails({ id }: { id: string }) {
                         <span className="font-semibold">Season {worstSeason.season}</span>
                         <span className="ml-2">({worstSeason.avg.toFixed(2)}/10)</span>
                         {worstSeason.yearLabel && (
-                          <div className="text-sm text-red-600 mt-1">
-                            {worstSeason.yearLabel}
-                          </div>
+                          <div className="text-sm text-red-600 mt-1">{worstSeason.yearLabel}</div>
                         )}
                       </div>
                     </div>
+                  </>
+                );
+              })()}
+
+              {/* Top 5 / Best Run / Worst Run */}
+              {(() => {
+                if (
+                  ratedEpisodes.length < 5 ||
+                  new Set(ratedEpisodes.map((ep) => ep.seasonNumber)).size <= 1
+                ) {
+                  return null;
+                }
+
+                const top5 = [...ratedEpisodes].sort((a, b) => b.rating - a.rating).slice(0, 5);
+
+                let bestRun: any = null;
+                let worstRun: any = null;
+                for (let i = 0; i <= ratedEpisodes.length - 3; i++) {
+                  const window = ratedEpisodes.slice(i, i + 3);
+                  const avg = window.reduce((s, ep) => s + ep.rating, 0) / 3;
+                  if (!bestRun || avg > bestRun.avg) bestRun = { eps: window, avg };
+                  if (!worstRun || avg < worstRun.avg) worstRun = { eps: window, avg };
+                }
+
+                const EpisodeBox = ({ ep }: { ep: any }) => (
+                  <div className="bg-white rounded-lg shadow p-2 w-32 flex-shrink-0">
+                    <div className="text-[10px] font-semibold text-gray-600 mb-1">
+                      S{ep.seasonNumber}E{ep.episodeNumber}
+                    </div>
+                    <div className="font-semibold text-xs truncate">{ep.title}</div>
+                    <div className="text-[10px] text-gray-500 truncate">{ep.airDate}</div>
+                    <div className="mt-1 font-bold text-base">{ep.rating.toFixed(1)}</div>
+                  </div>
+                );
+
+                return (
+                  <>
+                    <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
+                      <div
+                        className="px-4 py-3 font-bold min-w-[140px] flex items-center"
+                        style={{ backgroundColor: "#FFD700", color: "#4a3500" }}
+                      >
+                        Top 5
+                      </div>
+                      <div className="bg-yellow-50 text-yellow-900 px-4 py-3 flex-1 flex gap-3 flex-wrap">
+                        {top5.map((ep) => (
+                          <EpisodeBox key={ep.id} ep={ep} />
+                        ))}
+                      </div>
+                    </div>
+
+                    {bestRun && (
+                      <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
+                        <div className="bg-green-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
+                          Best Run
+                        </div>
+                        <div className="bg-green-100 text-green-800 px-4 py-3 flex-1 flex gap-3 flex-wrap">
+                          {bestRun.eps.map((ep: any) => (
+                            <EpisodeBox key={ep.id} ep={ep} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {worstRun && (
+                      <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
+                        <div className="bg-red-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
+                          Worst Run
+                        </div>
+                        <div className="bg-red-100 text-red-800 px-4 py-3 flex-1 flex gap-3 flex-wrap">
+                          {worstRun.eps.map((ep: any) => (
+                            <EpisodeBox key={ep.id} ep={ep} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </>
                 );
               })()}
