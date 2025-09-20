@@ -39,10 +39,15 @@ function getRatingStyle(rating: number): React.CSSProperties {
   const percent = rating / 4.9;
   const green = Math.floor(50 + percent * 50);
   const red = Math.floor(200 + percent * 55);
-  return {
-    backgroundColor: `rgb(${red}, ${green}, ${green / 2})`,
-    color: "#fff",
-  };
+  return { backgroundColor: `rgb(${red}, ${green}, ${green / 2})`, color: "#fff" };
+}
+
+function chunkArray<T>(arr: T[], size: number): T[][] {
+  const result: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) {
+    result.push(arr.slice(i, i + size));
+  }
+  return result;
 }
 
 export default function EpisodeGrid({ episodes }: { episodes: any[] }) {
@@ -52,7 +57,15 @@ export default function EpisodeGrid({ episodes }: { episodes: any[] }) {
     seasons[ep.seasonNumber].push(ep);
   }
 
-  const maxEpisodes = Math.max(...Object.values(seasons).map((eps) => eps.length));
+  let maxCols = 0;
+  const chunkedSeasons: { [season: number]: any[][] } = {};
+  for (const [seasonNumber, eps] of Object.entries(seasons)) {
+    const chunks = chunkArray(eps, 32);
+    chunkedSeasons[Number(seasonNumber)] = chunks;
+    for (const chunk of chunks) {
+      if (chunk.length > maxCols) maxCols = chunk.length;
+    }
+  }
 
   return (
     <div className="overflow-auto flex justify-center">
@@ -60,7 +73,7 @@ export default function EpisodeGrid({ episodes }: { episodes: any[] }) {
         <thead>
           <tr>
             <th className="w-16"></th>
-            {Array.from({ length: maxEpisodes }).map((_, i) => (
+            {Array.from({ length: maxCols }).map((_, i) => (
               <th key={i} className="text-xs text-center w-12 p-1">
                 Ep {i + 1}
               </th>
@@ -68,39 +81,45 @@ export default function EpisodeGrid({ episodes }: { episodes: any[] }) {
           </tr>
         </thead>
         <tbody>
-          {Object.entries(seasons).map(([seasonNumber, eps]) => (
-            <tr key={seasonNumber}>
-              <td className="text-right pr-2 font-semibold text-sm">S{seasonNumber}</td>
-              {Array.from({ length: maxEpisodes }).map((_, i) => {
-                const ep = eps[i];
-                if (!ep) {
-                  return <td key={i} className="w-12 h-12"></td>;
-                }
-
-                const [hovered, setHovered] = useState(false);
-                const cellRef = useRef<HTMLTableCellElement>(null);
-
-                return (
+          {Object.entries(chunkedSeasons).map(([seasonNumber, chunks]) =>
+            chunks.map((chunk, rowIndex) => (
+              <tr key={`${seasonNumber}-${rowIndex}`}>
+                {rowIndex === 0 && (
                   <td
-                    key={ep.id}
-                    ref={cellRef}
-                    onMouseEnter={() => setHovered(true)}
-                    onMouseLeave={() => setHovered(false)}
-                    style={getRatingStyle(ep.rating ?? 0)}
-                    className="w-12 h-12 text-xs font-bold text-center align-middle rounded relative group cursor-pointer"
+                    rowSpan={chunks.length}
+                    className="text-right pr-2 font-semibold text-sm align-middle"
                   >
-                    {ep.rating?.toFixed(1) ?? "N/A"}
-
-                    {hovered && (
-                      <TooltipPortal targetRef={cellRef}>
-                        <EpisodeTooltip ep={ep} />
-                      </TooltipPortal>
-                    )}
+                    S{seasonNumber}
                   </td>
-                );
-              })}
-            </tr>
-          ))}
+                )}
+                {Array.from({ length: maxCols }).map((_, i) => {
+                  const ep = chunk[i];
+                  if (!ep) return <td key={i} className="w-12 h-12"></td>;
+
+                  const [hovered, setHovered] = useState(false);
+                  const cellRef = useRef<HTMLTableCellElement>(null);
+
+                  return (
+                    <td
+                      key={ep.id}
+                      ref={cellRef}
+                      onMouseEnter={() => setHovered(true)}
+                      onMouseLeave={() => setHovered(false)}
+                      style={getRatingStyle(ep.rating ?? 0)}
+                      className="w-12 h-12 text-xs font-bold text-center align-middle rounded relative group cursor-pointer"
+                    >
+                      {ep.rating?.toFixed(1) ?? "N/A"}
+                      {hovered && (
+                        <TooltipPortal targetRef={cellRef}>
+                          <EpisodeTooltip ep={ep} />
+                        </TooltipPortal>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
