@@ -92,13 +92,16 @@ export default function NavBar() {
                         setShowDropdown(false);
                       }}
                     >
-                      <Image
-                        src={s.coverImageUrl || "/placeholder.jpg"}
-                        alt={s.title}
-                        width={32}
-                        height={48}
-                        className="rounded object-cover flex-shrink-0"
-                      />
+                      {s.coverImageUrl ? (
+                        <Image
+                          src={s.coverImageUrl}
+                          alt={s.title}
+                          width={32}
+                          height={48}
+                          className="rounded object-cover flex-shrink-0"
+                        />
+                      ) : null}
+
                       <span className="truncate max-w-[220px]">{s.title}</span>
                     </Link>
                   </li>
