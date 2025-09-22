@@ -49,6 +49,14 @@ export default function ShowDetails({ id }: { id: string }) {
     return "text-red-600";
   }
 
+  function Spinner() {
+    return (
+      <div className="flex items-center justify-center">
+        <div className="w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -80,8 +88,9 @@ export default function ShowDetails({ id }: { id: string }) {
     fetchData();
   }, [id]);
 
-  if (loading) return <p className="p-6">Loading...</p>;
-  if (!show) return <p className="p-6">Show not found.</p>;
+  if (!show && !loading) {
+      return <p className="p-6">Show not found.</p>;
+    }
 
   const ratedEpisodes = episodes.filter(
     (ep) => ep.rating !== null && ep.rating !== undefined && ep.rating > 0
@@ -96,18 +105,27 @@ export default function ShowDetails({ id }: { id: string }) {
       : "N/A";
 
   return (
-    <div className="bg-white min-h-screen text-gray-900">
-      <div className="max-w-5xl mx-auto p-6">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row gap-6 items-start">
-          {/* Cover Image */}
-          <Image
-            src={show.coverImageUrl || "/placeholder.jpg"}
-            alt={show.title}
-            width={200}
-            height={300}
-            className="rounded-lg shadow"
-          />
+    <div className="relative bg-white min-h-screen text-gray-900">
+        {/* Overlay spinner while fetching */}
+        {loading && (
+          <div className="absolute inset-3 flex items-start justify-center bg-white/70 z-50">
+            <Spinner />
+          </div>
+        )}
+
+        <div className="max-w-5xl mx-auto p-6">
+          {show && (
+            <>
+              {/* Header */}
+              <div className="flex flex-col md:flex-row gap-6 items-start">
+                {/* Cover Image */}
+                <Image
+                  src={show.coverImageUrl || "/placeholder.jpg"}
+                  alt={show.title}
+                  width={200}
+                  height={300}
+                  className="rounded-lg shadow"
+                />
 
           {/* Show Info and Ratings */}
           <div className="flex flex-col md:flex-row justify-between w-full">
@@ -495,6 +513,8 @@ export default function ShowDetails({ id }: { id: string }) {
             ))}
           </tbody>
         </table>
+          </>
+        )}
       </div>
     </div>
   );
