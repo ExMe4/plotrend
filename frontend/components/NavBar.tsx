@@ -47,7 +47,16 @@ export default function NavBar() {
     <nav className="sticky top-0 z-50 w-full bg-white shadow-md px-6 py-6 relative min-h-[80px]">
       {/* Logo */}
       <div className="absolute left-6 top-1/2 transform -translate-y-1/2">
-        <h1 className="text-2xl font-bold text-blue-600 px-2 py-1">Plotrend</h1>
+        <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition">
+          <Image
+            src="/logo.svg"
+            alt="Plotrend Logo"
+            width={32}
+            height={32}
+            className="object-contain"
+          />
+          <h1 className="text-2xl font-bold text-blue-600">Plotrend</h1>
+        </Link>
       </div>
 
       {/* Search box */}
