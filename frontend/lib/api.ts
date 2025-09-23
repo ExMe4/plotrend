@@ -1,3 +1,15 @@
+export async function getPopularShows() {
+  const res = await fetch("/api/shows/popular");
+  if (!res.ok) throw new Error("Failed to fetch popular shows");
+  return res.json();
+}
+
+export async function getLatestEpisode(tvId: number) {
+  const res = await fetch(`/api/shows/${tvId}/latest-episode`);
+  if (!res.ok) throw new Error("Failed to fetch latest episode");
+  return res.json();
+}
+
 export async function getShowDetails(id: string | number) {
   const res = await fetch(`/api/shows/${id}`);
   if (!res.ok) throw new Error("Failed to fetch show details");
