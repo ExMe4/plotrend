@@ -19,6 +19,8 @@ export default function Home() {
         setLatestEpisodes((prev) => ({ ...prev, [show.id]: ep }));
       }
     }
+
+    window.scrollTo(0, 0);
     loadData();
   }, []);
 

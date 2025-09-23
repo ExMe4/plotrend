@@ -85,6 +85,8 @@ export default function ShowDetails({ id }: { id: string }) {
       }
     }
 
+    window.scrollTo(0, 0);
+
     fetchData();
   }, [id]);
 
