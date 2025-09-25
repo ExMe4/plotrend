@@ -122,7 +122,7 @@ export default function ShowDetails({ id }: { id: string }) {
               <div className="flex flex-col md:flex-row gap-6 items-start">
                 {/* Cover Image */}
                 <Image
-                  src={show.coverImageUrl || "/placeholder.jpg"}
+                  src={show.coverImageUrl || "/placeholder.svg"}
                   alt={show.title}
                   width={200}
                   height={300}
@@ -469,7 +469,7 @@ export default function ShowDetails({ id }: { id: string }) {
           {cast.map((c) => (
             <div key={c.id} className="text-center">
               <Image
-                src={c.imageUrl || "/placeholder.jpg"}
+                src={c.imageUrl || "/placeholder.svg"}
                 alt={c.actorName}
                 width={120}
                 height={160}
