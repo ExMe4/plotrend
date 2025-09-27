@@ -100,7 +100,15 @@ export default function NavBar() {
                           height={48}
                           className="rounded object-cover flex-shrink-0"
                         />
-                      ) : null}
+                      ) :
+                        <Image
+                          src="/no-image.png"
+                          alt="placeholder"
+                          width={32}
+                          height={48}
+                          className="rounded object-cover flex-shrink-0"
+                        />
+                      }
 
                       <span className="truncate max-w-[220px]">{s.title}</span>
                     </Link>
