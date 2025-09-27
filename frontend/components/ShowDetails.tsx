@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { getShowDetails, getEpisodes, getCast } from "@/lib/api";
 import EpisodeGrid from "./EpisodeGrid";
+import EpisodeList from "@/components/EpisodeList";
 import RatingGraph from "./RatingGraph";
 import RatingToggle from "./RatingToggle";
 import Image from "next/image";
@@ -512,29 +513,7 @@ export default function ShowDetails({ id }: { id: string }) {
         )}
 
         {/* Episode Table */}
-        <h2 className="text-2xl font-semibold mt-12 mb-4">Episodes</h2>
-        <table className="w-full table-auto border-collapse border text-sm">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="p-2 border">S</th>
-              <th className="p-2 border">Ep</th>
-              <th className="p-2 border">Air Date</th>
-              <th className="p-2 border">Rating</th>
-              <th className="p-2 border text-left">Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            {episodes.map((ep) => (
-              <tr key={ep.id} className="hover:bg-gray-50">
-                <td className="p-2 border text-center">{ep.seasonNumber}</td>
-                <td className="p-2 border text-center">{ep.episodeNumber}</td>
-                <td className="p-2 border text-center">{ep.airDate}</td>
-                <td className="p-2 border text-center">{ep.rating}</td>
-                <td className="p-2 border">{ep.description}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <EpisodeList episodes={episodes} />
           </>
         )}
       </div>
