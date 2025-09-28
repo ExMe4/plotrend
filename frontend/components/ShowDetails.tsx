@@ -12,7 +12,17 @@ export default function ShowDetails({ id }: { id: string }) {
   const [episodes, setEpisodes] = useState<any[]>([]);
   const [cast, setCast] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState<"grid" | "graph">("grid");
+
+  const [view, setView] = useState<"grid" | "graph">(() => {
+    if (typeof window !== "undefined") {
+      return (localStorage.getItem("ratingView") as "grid" | "graph") || "grid";
+    }
+    return "grid";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("ratingView", view);
+  }, [view]);
 
   function getAERStyle(rating: number): string {
     if (rating >= 9.0) {
