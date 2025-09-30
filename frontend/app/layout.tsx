@@ -23,7 +23,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Plotrend",
   icons: {
-      icon: "/logo.svg",
+      icon: "/logo2.svg",
     },
 };
 
