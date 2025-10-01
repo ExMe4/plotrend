@@ -174,7 +174,12 @@ export default function ShowDetails({ id }: { id: string }) {
               )}
 
               <p className="text-gray-600 mb-2">
-                {show.startYear} – {show.endYear || "Ongoing"}
+                {show.startYear}
+                {show.endYear && show.endYear !== show.startYear
+                  ? ` – ${show.endYear}`
+                  : !show.endYear
+                  ? " – Ongoing"
+                  : ""}
               </p>
 
               {/* Episode Count */}
