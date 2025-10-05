@@ -33,3 +33,9 @@ export async function searchShows(query: string) {
   if (!res.ok) throw new Error("Failed to search shows");
   return res.json();
 }
+
+export async function getCreators(id: string) {
+  const res = await fetch(`/api/shows/${id}/creators`);
+  if (!res.ok) throw new Error("Failed to fetch creators");
+  return res.json();
+}

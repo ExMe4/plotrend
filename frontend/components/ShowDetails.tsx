@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { getShowDetails, getEpisodes, getCast } from "@/lib/api";
+import { getShowDetails, getEpisodes, getCast, getCreators } from "@/lib/api";
 import EpisodeGrid from "./EpisodeGrid";
 import Highlights from "@/components/Highlights";
 import EpisodeList from "@/components/EpisodeList";
@@ -11,6 +11,7 @@ import Image from "next/image";
 export default function ShowDetails({ id }: { id: string }) {
   const [show, setShow] = useState<any>(null);
   const [episodes, setEpisodes] = useState<any[]>([]);
+  const [creators, setCreators] = useState<any[]>([]);
   const [cast, setCast] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -72,10 +73,11 @@ export default function ShowDetails({ id }: { id: string }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const [showData, epData, castData] = await Promise.all([
+        const [showData, epData, castData, creatorData] = await Promise.all([
           getShowDetails(id),
           getEpisodes(id),
           getCast(id),
+          getCreators(id),
         ]);
 
         setShow(showData);
@@ -90,6 +92,7 @@ export default function ShowDetails({ id }: { id: string }) {
 
         setEpisodes(epData);
         setCast(castData);
+        setCreators(creatorData);
       } catch (err) {
         console.error(err);
       } finally {
@@ -299,6 +302,38 @@ export default function ShowDetails({ id }: { id: string }) {
 
         {/* Highlights Section */}
         <Highlights episodes={episodes} />
+
+        {/* Created by Section */}
+        {creators.length > 0 && (
+          <>
+            <h2 className="text-2xl font-semibold mt-12 mb-4">Created by</h2>
+            <div className="flex flex-wrap justify-center gap-8">
+              {creators.map((c) => (
+                <div key={c.id} className="text-center w-40">
+                  {c.imageUrl ? (
+                    <Image
+                      src={c.imageUrl}
+                      alt={c.name}
+                      width={120}
+                      height={160}
+                      className="mx-auto rounded-md shadow"
+                    />
+                  ) : (
+                    <Image
+                      src="/no-image.png"
+                      alt="No image"
+                      width={120}
+                      height={160}
+                      className="mx-auto rounded-md shadow"
+                    />
+                  )}
+                  <p className="font-semibold mt-2">{c.name}</p>
+                  {c.job && <p className="text-sm text-gray-500">{c.job}</p>}
+                </div>
+              ))}
+            </div>
+          </>
+        )}
 
         {/* Cast Section */}
         <h2 className="text-2xl font-semibold mt-12 mb-4">Cast</h2>
