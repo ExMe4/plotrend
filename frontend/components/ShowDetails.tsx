@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getShowDetails, getEpisodes, getCast, getCreators } from "@/lib/api";
 import EpisodeGrid from "./EpisodeGrid";
 import Highlights from "@/components/Highlights";
+import CreatorsSection from "@/components/CreatorsSection";
 import EpisodeList from "@/components/EpisodeList";
 import RatingGraph from "./RatingGraph";
 import RatingToggle from "./RatingToggle";
@@ -304,36 +305,7 @@ export default function ShowDetails({ id }: { id: string }) {
         <Highlights episodes={episodes} />
 
         {/* Created by Section */}
-        {creators.length > 0 && (
-          <>
-            <h2 className="text-2xl font-semibold mt-12 mb-4">Created by</h2>
-            <div className="flex flex-wrap justify-center gap-8">
-              {creators.map((c) => (
-                <div key={c.id} className="text-center w-40">
-                  {c.imageUrl ? (
-                    <Image
-                      src={c.imageUrl}
-                      alt={c.name}
-                      width={120}
-                      height={160}
-                      className="mx-auto rounded-md shadow"
-                    />
-                  ) : (
-                    <Image
-                      src="/no-image.png"
-                      alt="No image"
-                      width={120}
-                      height={160}
-                      className="mx-auto rounded-md shadow"
-                    />
-                  )}
-                  <p className="font-semibold mt-2">{c.name}</p>
-                  {c.job && <p className="text-sm text-gray-500">{c.job}</p>}
-                </div>
-              ))}
-            </div>
-          </>
-        )}
+        <CreatorsSection creators={creators} />
 
         {/* Cast Section */}
         <h2 className="text-2xl font-semibold mt-12 mb-4">Cast</h2>
