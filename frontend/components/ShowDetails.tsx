@@ -4,6 +4,7 @@ import { getShowDetails, getEpisodes, getCast, getCreators } from "@/lib/api";
 import EpisodeGrid from "./EpisodeGrid";
 import Highlights from "@/components/Highlights";
 import CreatorsSection from "@/components/CreatorsSection";
+import CastSection from "@/components/CastSection";
 import EpisodeList from "@/components/EpisodeList";
 import RatingGraph from "./RatingGraph";
 import RatingToggle from "./RatingToggle";
@@ -308,32 +309,7 @@ export default function ShowDetails({ id }: { id: string }) {
         <CreatorsSection creators={creators} />
 
         {/* Cast Section */}
-        <h2 className="text-2xl font-semibold mt-12 mb-4">Cast</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {cast.map((c) => (
-            <div key={c.id} className="text-center">
-              {c.imageUrl ? (
-                      <Image
-                        src={c.imageUrl}
-                        alt={c.actorName}
-                        width={120}
-                        height={160}
-                        className="mx-auto rounded-md shadow"
-                      />
-                    ) : (
-                      <Image
-                        src="/no-image.png"
-                        alt="No image"
-                        width={120}
-                        height={160}
-                        className="mx-auto rounded-md shadow"
-                      />
-                    )}
-              <p className="font-semibold mt-2">{c.actorName}</p>
-              <p className="text-sm text-gray-500">{c.characterName}</p>
-            </div>
-          ))}
-        </div>
+        <CastSection cast={cast} />
 
         {/* Synopsis Section */}
         {show.overview && (
