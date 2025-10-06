@@ -48,7 +48,7 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
 
   const seasonNumbers = [...new Set(sorted.map((ep) => ep.seasonNumber))];
 
-  // Initialize data points
+  // Prepare data
   const data = sorted.map((ep) => {
     const entry: any = {
       name: `S${ep.seasonNumber}E${ep.episodeNumber}`,
@@ -89,74 +89,87 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
     const mid = Math.floor((indices[0] + indices[indices.length - 1]) / 2);
 
     let label: string;
-    if (seasonNumbers.length < 10) {
-      label = `Season ${season}`;
-    } else if (seasonNumbers.length <= 25) {
-      label = `S${season}`;
-    } else {
-      label = `${season}`;
-    }
+    if (seasonNumbers.length < 10) label = `Season ${season}`;
+    else if (seasonNumbers.length <= 25) label = `S${season}`;
+    else label = `${season}`;
 
     seasonLabels.push({ index: mid, label });
   });
 
   return (
-      <div className="w-full flex justify-center">
-        <div className="w-[1600px] h-[600px]">
-            <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data}>
-              <XAxis
-                dataKey="name"
-                tickFormatter={(_, index) => {
-                  const match = seasonLabels.find((l) => l.index === index);
-                  return match ? match.label : "";
-                }}
-                interval={0}
-                angle={0}
-                textAnchor="middle"
-                height={40}
-              />
-              <YAxis
-                domain={[0, 10]}
-                ticks={Array.from({ length: 21 }, (_, i) => i * 0.5)}
-                tickFormatter={(val) => (Number.isInteger(val) ? val.toString() : "")}
-                allowDecimals={true}
-              />
+    <div className="w-full flex justify-center">
+      <div className="w-[1600px] h-[600px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={data}>
+            {/* X-Axis */}
+            <XAxis
+              dataKey="name"
+              tickFormatter={(_, index) => {
+                const match = seasonLabels.find((l) => l.index === index);
+                return match ? match.label : "";
+              }}
+              interval={0}
+              angle={0}
+              textAnchor="middle"
+              height={40}
+              label={{
+                value: "Episode",
+                position: "insideBottom",
+                style: { fill: "#374151", fontSize: 14, fontWeight: 500 },
+              }}
+            />
 
+            {/* Y-Axis */}
+            <YAxis
+              domain={[0, 10]}
+              ticks={Array.from({ length: 21 }, (_, i) => i * 0.5)}
+              tickFormatter={(val) => (Number.isInteger(val) ? val.toString() : "")}
+              allowDecimals={true}
+              label={{
+                value: "Rating",
+                angle: -90,
+                position: "insideLeft",
+                offset: 10,
+                style: { fill: "#374151", fontSize: 14, fontWeight: 500 },
+              }}
+            />
 
-              <Tooltip content={({ active, payload }) => {
+            {/* Tooltip */}
+            <Tooltip
+              content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   const ep = payload[0].payload;
                   return <EpisodeTooltip ep={ep} />;
                 }
                 return null;
-              }} />
+              }}
+            />
 
-              {/* Main continuous line */}
+            {/* Main continuous line */}
+            <Line
+              type="monotone"
+              dataKey="rating"
+              stroke="#ccc"
+              strokeWidth={4}
+              dot={false}
+              isAnimationActive={false}
+            />
+
+            {/* Colored overlays per season */}
+            {seasonNumbers.map((seasonNum) => (
               <Line
+                key={seasonNum}
                 type="monotone"
-                dataKey="rating"
-                stroke="#ccc"
+                dataKey={`season${seasonNum}`}
+                stroke={seasonColors[(seasonNum - 1) % seasonColors.length]}
                 strokeWidth={4}
                 dot={false}
                 isAnimationActive={false}
               />
-
-              {/* Colored overlays per season */}
-              {seasonNumbers.map((seasonNum) => (
-                <Line
-                  key={seasonNum}
-                  type="monotone"
-                  dataKey={`season${seasonNum}`}
-                  stroke={seasonColors[(seasonNum - 1) % seasonColors.length]}
-                  strokeWidth={4}
-                  dot={false}
-                  isAnimationActive={false}
-                />
-              ))}
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+            ))}
+          </LineChart>
+        </ResponsiveContainer>
       </div>
+    </div>
   );
 }
