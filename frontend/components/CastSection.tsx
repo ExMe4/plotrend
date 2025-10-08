@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 
 interface CastMember {
   id: string;
@@ -16,7 +17,11 @@ export default function CastSection({ cast }: { cast: CastMember[] }) {
       <h2 className="text-2xl font-semibold mb-4 text-left">Cast</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {cast.map((c) => (
-          <div key={c.id} className="text-center">
+          <Link
+            key={c.id}
+            href={`/people/${c.id}`}
+            className="text-center hover:opacity-80 transition"
+          >
             {c.imageUrl ? (
               <Image
                 src={c.imageUrl}
@@ -38,7 +43,7 @@ export default function CastSection({ cast }: { cast: CastMember[] }) {
             {c.characterName && (
               <p className="text-sm text-gray-500">{c.characterName}</p>
             )}
-          </div>
+          </Link>
         ))}
       </div>
     </section>

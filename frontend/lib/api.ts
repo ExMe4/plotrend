@@ -39,3 +39,9 @@ export async function getCreators(id: string) {
   if (!res.ok) throw new Error("Failed to fetch creators");
   return res.json();
 }
+
+export async function getPersonDetails(id: string | number) {
+  const res = await fetch(`/api/people/${id}`);
+  if (!res.ok) throw new Error("Failed to fetch person details");
+  return res.json();
+}

@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 
 interface Creator {
   id: string;
@@ -16,7 +17,11 @@ export default function CreatorsSection({ creators }: { creators: Creator[] }) {
       <h2 className="text-2xl font-semibold mb-4 text-left">Created by</h2>
       <div className="flex flex-wrap justify-center gap-8">
         {creators.map((c) => (
-          <div key={c.id} className="text-center w-40">
+          <Link
+            key={c.id}
+            href={`/people/${c.id}`}
+            className="text-center w-40 hover:opacity-80 transition"
+          >
             {c.imageUrl ? (
               <Image
                 src={c.imageUrl}
@@ -36,7 +41,7 @@ export default function CreatorsSection({ creators }: { creators: Creator[] }) {
             )}
             <p className="font-semibold mt-2">{c.name}</p>
             {c.job && <p className="text-sm text-gray-500">{c.job}</p>}
-          </div>
+          </Link>
         ))}
       </div>
     </section>
