@@ -68,7 +68,7 @@ export default function PersonDetails({ id }: { id: string }) {
               <p className="text-gray-600 mb-4">{person.knownFor}</p>
             )}
             {person.biography && (
-              <p className="text-gray-700 text-sm leading-relaxed max-w-2xl">
+              <p className="text-gray-700 text-sm leading-relaxed max-w-2xl line-clamp-9">
                 {person.biography}
               </p>
             )}
