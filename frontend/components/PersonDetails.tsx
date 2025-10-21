@@ -32,6 +32,12 @@ export default function PersonDetails({ id }: { id: string }) {
 
   if (!person) return <p className="p-6">Person not found.</p>;
 
+  // Filter out shows with no page or no cover image
+  const validShows =
+    person.shows?.filter(
+      (show: any) => show.id && show.coverImageUrl && show.title
+    ) ?? [];
+
   return (
     <div className="relative bg-white min-h-screen text-gray-900">
       <div className="max-w-5xl mx-auto p-6">
@@ -70,15 +76,13 @@ export default function PersonDetails({ id }: { id: string }) {
         </div>
 
         {/* Shows Carousel */}
-        {person.shows && person.shows.length > 0 && (
+        {validShows.length > 0 ? (
           <section className="mt-12">
-            <h2 className="text-2xl font-semibold mb-4 text-left">
-              Shows
-            </h2>
+            <h2 className="text-2xl font-semibold mb-4 text-left">Shows</h2>
 
             <div className="relative">
               <div className="flex overflow-x-auto space-x-4 pb-4 scrollbar-hide">
-                {person.shows.map((show: any) => (
+                {validShows.map((show: any) => (
                   <Link
                     key={show.id}
                     href={`/shows/${show.id}`}
@@ -99,6 +103,10 @@ export default function PersonDetails({ id }: { id: string }) {
               </div>
             </div>
           </section>
+        ) : (
+          <p className="mt-12 text-gray-500 italic">
+            No relevant shows found for this person.
+          </p>
         )}
       </div>
     </div>

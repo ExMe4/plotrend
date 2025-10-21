@@ -16,8 +16,33 @@ export async function GET(
 
   const data = await res.json();
 
-  const shows =
+  // Filter out irrelevant shows
+  const excludedKeywords = [
+    "Tonight Show",
+    "Late Show",
+    "Late Night",
+    "Jimmy Kimmel",
+    "Stephen Colbert",
+    "Conan",
+    "Documentary",
+    "News",
+    "Interview",
+    "Golden Globe Awards",
+  ];
+
+  const filteredShows =
     data.tv_credits?.cast
+      ?.filter((s: any) => {
+        const title = (s.name || "").toLowerCase();
+        const hasExcludedWord = excludedKeywords.some((word) =>
+          title.includes(word.toLowerCase())
+        );
+
+        const hasExcludedGenre =
+          s.genre_ids?.some((g: number) => [99, 10763, 10767].includes(g)) ?? false;
+
+        return !hasExcludedWord && !hasExcludedGenre;
+      })
       ?.map((s: any) => ({
         id: s.id,
         title: s.name,
@@ -36,6 +61,6 @@ export async function GET(
       ? `https://image.tmdb.org/t/p/w500${data.profile_path}`
       : null,
     knownFor: data.known_for_department,
-    shows,
+    shows: filteredShows,
   });
 }
