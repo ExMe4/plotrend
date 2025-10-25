@@ -1,5 +1,5 @@
-import PersonPage from "@/app/personPage";
+import PersonDetails from "@/components/PersonDetails";
 
-export default function PersonRoute({ params }: { params: { id: string } }) {
-  return <PersonPage id={params.id} />;
+export default function PersonPage({ params }: { params: { id: string } }) {
+  return <PersonDetails id={params.id} />;
 }
