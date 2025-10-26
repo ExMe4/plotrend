@@ -1,38 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
-import { getPersonDetails } from "@/lib/api";
 import Image from "next/image";
 import Link from "next/link";
+import Spinner from "@/components/Spinner";
 
-export default function PersonDetails({ id }: { id: string }) {
-  const [person, setPerson] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const data = await getPersonDetails(id);
-        setPerson(data);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
-    window.scrollTo(0, 0);
-  }, [id]);
-
-  if (loading)
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
-      </div>
-    );
-
+export default function PersonDetails({ person }: { person: any }) {
   if (!person) return <p className="p-6">Person not found.</p>;
 
-  // Filter out shows with no page or no cover image
   const validShows =
     person.shows?.filter(
       (show: any) => show.id && show.coverImageUrl && show.title
@@ -79,7 +52,6 @@ export default function PersonDetails({ id }: { id: string }) {
         {validShows.length > 0 ? (
           <section className="mt-12">
             <h2 className="text-2xl font-semibold mb-4 text-left">Shows</h2>
-
             <div className="relative">
               <div className="flex overflow-x-auto space-x-4 pb-4 scrollbar-hide">
                 {validShows.map((show: any) => (
