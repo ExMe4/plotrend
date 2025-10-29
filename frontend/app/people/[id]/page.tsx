@@ -22,16 +22,24 @@ export default async function PersonPage({ params }: { params: { id: string } })
     "Jimmy Kimmel",
     "Stephen Colbert",
     "Conan",
-    "Documentary",
-    "News",
-    "Interview",
     "Golden Globe Awards",
     "Tony Awards",
     "The Oscars",
   ];
 
+  // Deduplicate shows by ID
+  const uniqueShowsMap = new Map();
+
+  data.tv_credits?.cast?.forEach((s: any) => {
+    if (!uniqueShowsMap.has(s.id)) {
+      uniqueShowsMap.set(s.id, s);
+    }
+  });
+
+  const uniqueShows = Array.from(uniqueShowsMap.values());
+
   const filteredShows =
-    data.tv_credits?.cast
+    uniqueShows
       ?.filter((s: any) => {
         const title = (s.name || "").toLowerCase();
         const hasExcludedWord = excludedKeywords.some((word) =>
