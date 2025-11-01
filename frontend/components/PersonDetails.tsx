@@ -2,9 +2,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import Spinner from "@/components/Spinner";
+import { useEffect } from "react";
 
 export default function PersonDetails({ person }: { person: any }) {
   if (!person) return <p className="p-6">Person not found.</p>;
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const validShows =
     person.shows?.filter(
