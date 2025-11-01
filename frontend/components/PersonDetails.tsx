@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Spinner from "@/components/Spinner";
+import PersonRatingsGraph from "./PersonRatingsGraph";
 import { useEffect } from "react";
 
 export default function PersonDetails({ person }: { person: any }) {
@@ -52,6 +53,9 @@ export default function PersonDetails({ person }: { person: any }) {
             )}
           </div>
         </div>
+
+        {/* Shows Rating Graph */}
+        <PersonRatingsGraph shows={validShows} />
 
         {/* Shows Carousel */}
         {validShows.length > 0 ? (

@@ -25,9 +25,10 @@ export default async function PersonPage({ params }: { params: { id: string } })
     "Golden Globe Awards",
     "Tony Awards",
     "The Oscars",
+    "Kids' Choice Awards",
+    "MTV Movie & TV Awards",
   ];
 
-  // Deduplicate shows by ID
   const uniqueShowsMap = new Map();
 
   data.tv_credits?.cast?.forEach((s: any) => {
@@ -53,9 +54,11 @@ export default async function PersonPage({ params }: { params: { id: string } })
       })
       ?.map((s: any) => ({
         id: s.id,
-        title: s.name,
-        popularity: s.popularity,
-        coverImageUrl: s.poster_path
+          title: s.name,
+          popularity: s.popularity,
+          rating: s.vote_average ?? null,
+          first_air_date: s.first_air_date ?? null,
+          coverImageUrl: s.poster_path
           ? `https://image.tmdb.org/t/p/w500${s.poster_path}`
           : null,
       }))
