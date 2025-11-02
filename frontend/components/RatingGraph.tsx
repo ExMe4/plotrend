@@ -145,16 +145,6 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
               }}
             />
 
-            {/* Main continuous line */}
-            <Line
-              type="monotone"
-              dataKey="rating"
-              stroke="#ccc"
-              strokeWidth={4}
-              dot={false}
-              isAnimationActive={false}
-            />
-
             {/* Colored overlays per season */}
             {seasonNumbers.map((seasonNum) => (
               <Line
