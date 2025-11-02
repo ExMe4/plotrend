@@ -22,6 +22,25 @@ const seasonColors = [
   "#ec4899", // pink
 ];
 
+function computeTrendLine(episodes: any[]) {
+  const valid = episodes
+    .map((ep, i) => ({ x: i + 1, y: ep.rating }))
+    .filter((p) => typeof p.y === "number" && !isNaN(p.y));
+
+  if (valid.length < 2) return { slope: 0, intercept: valid[0]?.y ?? 0 };
+
+  const n = valid.length;
+  const sumX = valid.reduce((acc, p) => acc + p.x, 0);
+  const sumY = valid.reduce((acc, p) => acc + p.y, 0);
+  const sumXY = valid.reduce((acc, p) => acc + p.x * p.y, 0);
+  const sumX2 = valid.reduce((acc, p) => acc + p.x * p.x, 0);
+
+  const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+  const intercept = (sumY - slope * sumX) / n;
+
+  return { slope, intercept };
+}
+
 export default function RatingGraph({ episodes }: { episodes: any[] }) {
   if (!episodes?.length) return null;
 
@@ -33,12 +52,15 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
   );
 
   const seasonNumbers = [...new Set(sorted.map((ep) => ep.seasonNumber))];
+  const { slope, intercept } = computeTrendLine(sorted);
 
-  // Prepare data
-  const data = sorted.map((ep) => {
+    // Prepare data
+  const data = sorted.map((ep, idx) => {
     const entry: any = {
+      index: idx + 1,
       name: `S${ep.seasonNumber}E${ep.episodeNumber}`,
       rating: ep.rating ?? null,
+      trend: intercept + slope * (idx + 1),
       season: ep.seasonNumber,
       title: ep.title,
       airDate: ep.airDate,
@@ -47,7 +69,8 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
     };
 
     seasonNumbers.forEach((sNum) => {
-      entry[`season${sNum}`] = ep.seasonNumber === sNum ? ep.rating ?? null : null;
+      entry[`season${sNum}`] =
+        ep.seasonNumber === sNum ? ep.rating ?? null : null;
     });
 
     return entry;
@@ -73,7 +96,10 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
     <div className="w-full flex justify-center">
       <div className="w-[1600px] h-[600px]">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data}>
+          <LineChart
+            data={data}
+            margin={{ right: 10}}
+          >
             {/* X-Axis */}
             <XAxis
               dataKey="name"
@@ -118,7 +144,19 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
               }}
             />
 
-            {/* One colored line per season + visible dots */}
+            {/* Trend line */}
+            <Line
+              type="linear"
+              dataKey="trend"
+              stroke="#9ca3af"
+              strokeWidth={2}
+              strokeDasharray="6 4"
+              dot={false}
+              isAnimationActive={false}
+              activeDot={false}
+            />
+
+            {/* Season lines */}
             {seasonNumbers.map((seasonNum, idx) => (
               <Line
                 key={seasonNum}
