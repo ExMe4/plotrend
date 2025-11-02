@@ -18,33 +18,19 @@ const seasonColors = [
   "#22d3ee", // cyan
   "#a855f7", // purple
   "#14b8a6", // teal
+  "#eab308", // amber
+  "#ec4899", // pink
 ];
 
-function CustomTooltip({ active, payload }: any) {
-  if (active && payload && payload.length) {
-    const ep = payload[0].payload;
-    return (
-      <div className="bg-white p-2 border rounded shadow text-xs">
-        <div className="font-semibold">
-          S{ep.seasonNumber}E{ep.episodeNumber}
-        </div>
-        <div className="text-gray-500">{ep.airDate}</div>
-        <div className="text-gray-700">{ep.title}</div>
-        <div className="mt-1">Rating: {ep.rating ?? "N/A"}</div>
-      </div>
-    );
-  }
-  return null;
-}
-
 export default function RatingGraph({ episodes }: { episodes: any[] }) {
+  if (!episodes?.length) return null;
+
   // Sort episodes
-  const sorted = [...episodes].sort((a, b) => {
-    if (a.seasonNumber !== b.seasonNumber) {
-      return a.seasonNumber - b.seasonNumber;
-    }
-    return a.episodeNumber - b.episodeNumber;
-  });
+  const sorted = [...episodes].sort((a, b) =>
+    a.seasonNumber !== b.seasonNumber
+      ? a.seasonNumber - b.seasonNumber
+      : a.episodeNumber - b.episodeNumber
+  );
 
   const seasonNumbers = [...new Set(sorted.map((ep) => ep.seasonNumber))];
 
@@ -59,21 +45,9 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
       seasonNumber: ep.seasonNumber,
       episodeNumber: ep.episodeNumber,
     };
-    // Add season-specific rating key (e.g., season1, season2...)
-    seasonNumbers.forEach((sNum, idx) => {
-      const prevSeason = seasonNumbers[idx - 1];
 
-      // Include episode if it belongs to the current season
-      // OR if it's the first episode of the season (to connect lines)
-      const isInSeason = ep.seasonNumber === sNum;
-      const isFirstOfSeason =
-        idx > 0 &&
-        ep.seasonNumber === prevSeason &&
-        sorted.findIndex((e) => e.seasonNumber === sNum) ===
-          sorted.indexOf(ep) - 1;
-
-      entry[`season${sNum}`] =
-        isInSeason || isFirstOfSeason ? ep.rating ?? null : null;
+    seasonNumbers.forEach((sNum) => {
+      entry[`season${sNum}`] = ep.seasonNumber === sNum ? ep.rating ?? null : null;
     });
 
     return entry;
@@ -81,18 +55,17 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
 
   // X-axis labels
   const seasonLabels: { index: number; label: string }[] = [];
-
   seasonNumbers.forEach((season) => {
     const indices = data
       .map((d, i) => (d.season === season ? i : -1))
       .filter((i) => i !== -1);
     const mid = Math.floor((indices[0] + indices[indices.length - 1]) / 2);
-
-    let label: string;
-    if (seasonNumbers.length < 10) label = `Season ${season}`;
-    else if (seasonNumbers.length <= 25) label = `S${season}`;
-    else label = `${season}`;
-
+    const label =
+      seasonNumbers.length < 10
+        ? `Season ${season}`
+        : seasonNumbers.length <= 25
+        ? `S${season}`
+        : `${season}`;
     seasonLabels.push({ index: mid, label });
   });
 
@@ -145,16 +118,39 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
               }}
             />
 
-            {/* Colored overlays per season */}
-            {seasonNumbers.map((seasonNum) => (
+            {/* One colored line per season + visible dots */}
+            {seasonNumbers.map((seasonNum, idx) => (
               <Line
                 key={seasonNum}
                 type="monotone"
                 dataKey={`season${seasonNum}`}
-                stroke={seasonColors[(seasonNum - 1) % seasonColors.length]}
-                strokeWidth={4}
-                dot={false}
+                stroke={seasonColors[idx % seasonColors.length]}
+                strokeWidth={3}
                 isAnimationActive={false}
+                dot={{
+                  r: 5,
+                  stroke: seasonColors[idx % seasonColors.length],
+                  fill: seasonColors[idx % seasonColors.length],
+                  strokeWidth: 2,
+                  cursor: "pointer",
+                  onMouseEnter: (e: any) => {
+                    e.target.setAttribute(
+                      "fill",
+                      seasonColors[idx % seasonColors.length]
+                    );
+                    e.target.setAttribute("r", "7");
+                  },
+                  onMouseLeave: (e: any) => {
+                    e.target.setAttribute(
+                      "fill",
+                      seasonColors[idx % seasonColors.length]
+                    );
+                    e.target.setAttribute("r", "5");
+                  },
+                }}
+                activeDot={{
+                  r: 7,
+                }}
               />
             ))}
           </LineChart>
