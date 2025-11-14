@@ -98,7 +98,7 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={data}
-            margin={{ right: 10}}
+            margin={{ top: 10, right: 10}}
           >
             {/* X-Axis */}
             <XAxis
