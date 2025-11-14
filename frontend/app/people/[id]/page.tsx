@@ -23,6 +23,7 @@ export default async function PersonPage({ params }: { params: { id: string } })
     "Stephen Colbert",
     "Conan",
     "Golden Globe Awards",
+    "The Emmy Awards",
     "Tony Awards",
     "The Oscars",
     "Kids' Choice Awards",
