@@ -171,23 +171,12 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
                   fill: seasonColors[idx % seasonColors.length],
                   strokeWidth: 2,
                   cursor: "pointer",
-                  onMouseEnter: (e: any) => {
-                    e.target.setAttribute(
-                      "fill",
-                      seasonColors[idx % seasonColors.length]
-                    );
-                    e.target.setAttribute("r", "7");
-                  },
-                  onMouseLeave: (e: any) => {
-                    e.target.setAttribute(
-                      "fill",
-                      seasonColors[idx % seasonColors.length]
-                    );
-                    e.target.setAttribute("r", "5");
-                  },
                 }}
                 activeDot={{
                   r: 7,
+                  stroke: seasonColors[idx % seasonColors.length],
+                  fill: seasonColors[idx % seasonColors.length],
+                  strokeWidth: 2,
                 }}
               />
             ))}
