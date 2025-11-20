@@ -88,29 +88,33 @@ export default function PersonRatingsGraph({ shows }: { shows: any[] }) {
               fill="#3b82f6"
               stroke="#1d4ed8"
               strokeWidth={1}
-              shape={(props) => (
-                <circle
-                  {...props}
-                  r={6}
-                  fill="#3b82f6"
-                  stroke="#1d4ed8"
-                  strokeWidth={1}
-                  style={{
-                    cursor: "pointer",
-                    transition: "all 0.15s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.setAttribute("fill", "#2563eb");
-                    e.currentTarget.setAttribute("r", "8");
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.setAttribute("fill", "#3b82f6");
-                    e.currentTarget.setAttribute("r", "6");
-                  }}
-                  onClick={(e) => handleDotClick(props.payload, e)}
-                  tabIndex={-1}
-                />
-              )}
+             shape={(props) => {
+               const { payload, coverImageUrl, title, id, ...rest } = props;
+
+               return (
+                 <circle
+                   {...rest}
+                   r={6}
+                   fill="#3b82f6"
+                   stroke="#1d4ed8"
+                   strokeWidth={1}
+                   style={{
+                     cursor: "pointer",
+                     transition: "all 0.15s ease",
+                   }}
+                   onMouseEnter={(e) => {
+                     e.currentTarget.setAttribute("fill", "#2563eb");
+                     e.currentTarget.setAttribute("r", "8");
+                   }}
+                   onMouseLeave={(e) => {
+                     e.currentTarget.setAttribute("fill", "#3b82f6");
+                     e.currentTarget.setAttribute("r", "6");
+                   }}
+                   onClick={(e) => handleDotClick(payload, e)}
+                   tabIndex={-1}
+                 />
+               );
+             }}
             />
           </ScatterChart>
         </ResponsiveContainer>
