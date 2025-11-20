@@ -34,19 +34,30 @@ export default function ShowExtras({
     (ep) => ep.rating !== null && ep.rating !== undefined && ep.rating > 0
   );
 
+  const hasRatedEpisodes = ratedEpisodes.length > 0;
+
   return (
     <div className="bg-white text-gray-900">
       <div className="max-w-5xl mx-auto p-6">
+
         {/* Rating Toggle & View */}
         <div>
-          <RatingToggle view={view} setView={setView} />
-          <div className="mt-6 -mx-6">
-            {view === "grid" ? (
-              <EpisodeGrid episodes={ratedEpisodes} />
-            ) : (
-              <RatingGraph episodes={ratedEpisodes} />
-            )}
-          </div>
+          {hasRatedEpisodes ? (
+            <>
+              <RatingToggle view={view} setView={setView} />
+              <div className="mt-6 -mx-6">
+                {view === "grid" ? (
+                  <EpisodeGrid episodes={ratedEpisodes} />
+                ) : (
+                  <RatingGraph episodes={ratedEpisodes} />
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="text-center text-gray-500 text-sm py-6">
+              No episodes have ratings yet.
+            </div>
+          )}
         </div>
 
         <Highlights episodes={episodes} />
