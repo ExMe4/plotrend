@@ -89,11 +89,20 @@ export default function PersonRatingsGraph({ shows }: { shows: any[] }) {
               stroke="#1d4ed8"
               strokeWidth={1}
              shape={(props) => {
-               const { payload, coverImageUrl, title, id, ...rest } = props;
+               const {
+                 payload,
+                 tooltipPayload,
+                 tooltipPosition,
+                 cx,
+                 cy,
+                 ...svgProps
+               } = props;
 
                return (
                  <circle
-                   {...rest}
+                   cx={cx}
+                   cy={cy}
+                   {...svgProps}
                    r={6}
                    fill="#3b82f6"
                    stroke="#1d4ed8"
