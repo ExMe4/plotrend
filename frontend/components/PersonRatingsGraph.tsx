@@ -47,7 +47,7 @@ export default function PersonRatingsGraph({ shows }: { shows: any[] }) {
     <div className="w-full flex justify-center mt-10 select-none">
       <div className="w-[1000px] h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
-          <ScatterChart margin={{ top: 10, right: 10}} >
+          <ScatterChart margin={{ top: 10, right: 10, bottom: 10}} >
             <XAxis
               dataKey="year"
               name="Year"
