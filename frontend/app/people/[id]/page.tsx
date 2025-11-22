@@ -1,7 +1,7 @@
 import PersonDetails from "@/components/PersonDetails";
 
 export default async function PersonPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+  const { id } = await params;
 
   const res = await fetch(
     `https://api.themoviedb.org/3/person/${id}?api_key=${process.env.TMDB_KEY}&append_to_response=tv_credits`,
