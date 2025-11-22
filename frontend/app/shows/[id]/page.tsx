@@ -10,7 +10,7 @@ import { Suspense } from "react";
 import Spinner from "@/components/Spinner";
 
 export default async function ShowPage({ params }: { params: { id: string } }) {
-  const id = params.id;
+  const { id } = await params;
   const show = await getTMDBShowDetails(id);
 
   return (
