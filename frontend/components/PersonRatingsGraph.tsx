@@ -95,6 +95,11 @@ export default function PersonRatingsGraph({ shows }: { shows: any[] }) {
                  tooltipPosition,
                  cx,
                  cy,
+                 coverImageUrl,
+                 title,
+                 id,
+                 rating,
+                 year,
                  ...svgProps
                } = props;
 
