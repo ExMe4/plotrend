@@ -8,13 +8,71 @@ import {
 } from "@/lib/tmdb";
 import { Suspense } from "react";
 import Spinner from "@/components/Spinner";
+import Script from "next/script";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
+type Params = { id: string };
+
+export async function generateMetadata({ params }: { params: Params }) {
+  const id = params.id;
+  const show = await getTMDBShowDetails(id);
+
+  const title = show.title ?? "Show";
+  const yearRange = show.startYear ? (show.endYear ? `${show.startYear}–${show.endYear}` : show.startYear) : "";
+  const fullTitle = `${title} `;
+
+  const image = show.backdropUrl ?? show.coverImageUrl ?? `${SITE_URL}/og-default.png`;
+  const canonical = `${SITE_URL}/shows/${id}`;
+
+  return {
+    title: fullTitle,
+    description: show.overview ?? `Ratings and episode trends for ${title}`,
+    alternates: { canonical },
+    openGraph: {
+      title: fullTitle,
+      description: show.overview ?? "",
+      url: canonical,
+      images: [{ url: image, width: 1200, height: 630, alt: `${title} cover` }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: fullTitle,
+      description: show.overview ?? "",
+      images: [image],
+    },
+  };
+}
 
 export default async function ShowPage({ params }: { params: { id: string } }) {
   const { id } = await params;
   const show = await getTMDBShowDetails(id);
 
+  // JSON-LD structured data for TVSeries
+  const canonical = `${SITE_URL}/shows/${id}`;
+  const ld = {
+    "@context": "https://schema.org",
+    "@type": "TVSeries",
+    name: show.title,
+    url: canonical,
+    description: show.overview,
+    image: show.backdropUrl ?? show.coverImageUrl,
+    datePublished: show.startYear ? `${show.startYear}` : undefined,
+    aggregateRating: show.rating
+      ? {
+          "@type": "AggregateRating",
+          ratingValue: show.rating,
+          bestRating: "10",
+          ratingCount: show.vote_count ?? undefined,
+        }
+      : undefined,
+  };
+
   return (
     <div className="bg-white text-gray-900 min-h-screen">
+      {/* JSON-LD: server component can render Script */}
+      <Script id="ld-tvseries" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
       <Suspense fallback={<Spinner />}>
         <AsyncShowExtras id={id} show={show} />
       </Suspense>

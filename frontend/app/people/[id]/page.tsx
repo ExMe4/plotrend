@@ -1,4 +1,48 @@
 import PersonDetails from "@/components/PersonDetails";
+import Script from "next/script";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const id = params.id;
+  const res = await fetch(
+    `https://api.themoviedb.org/3/person/${id}?api_key=${process.env.TMDB_KEY}&append_to_response=tv_credits`,
+    { next: { revalidate: 86400 } }
+  );
+
+  if (!res.ok) {
+    return {
+      title: "Person",
+      description: "Person profile",
+      alternates: { canonical: `${SITE_URL}/people/${id}` },
+    };
+  }
+
+  const data = await res.json();
+  const name = data.name ?? "Person";
+  const description = data.biography ? data.biography.slice(0, 160) : `${name} — filmography and ratings.`;
+  const image = data.profile_path ? `https://image.tmdb.org/t/p/w500${data.profile_path}` : `${SITE_URL}/person-default.png`;
+  const canonical = `${SITE_URL}/people/${id}`;
+
+  return {
+    title: name,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title: name,
+      description,
+      url: canonical,
+      images: [{ url: image, width: 800, height: 800, alt: `${name}` }],
+      type: "profile",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: name,
+      description,
+      images: [image],
+    },
+  };
+}
 
 export default async function PersonPage({ params }: { params: { id: string } }) {
   const { id } = await params;
@@ -76,5 +120,21 @@ export default async function PersonPage({ params }: { params: { id: string } })
     shows: filteredShows,
   };
 
-  return <PersonDetails person={person} />;
+  // JSON-LD for Person
+  const canonical = `${SITE_URL}/people/${id}`;
+  const ld = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: person.name,
+    url: canonical,
+    image: person.profileImageUrl,
+    description: person.biography ? (person.biography.slice(0, 280) || undefined) : undefined,
+  };
+
+  return (
+    <>
+      <Script id="ld-person" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
+      <PersonDetails person={person} />
+    </>
+  );
 }
