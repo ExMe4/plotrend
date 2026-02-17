@@ -3,8 +3,13 @@ import Script from "next/script";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const id = params.id;
+type Params = { id: string };
+
+export async function generateMetadata(
+  { params }: { params: Promise<Params> }
+) {
+  const { id } = await params;
+
   const res = await fetch(
     `https://api.themoviedb.org/3/person/${id}?api_key=${process.env.TMDB_KEY}&append_to_response=tv_credits`,
     { next: { revalidate: 86400 } }
@@ -14,37 +19,60 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
     return {
       title: "Person",
       description: "Person profile",
-      alternates: { canonical: `${SITE_URL}/people/${id}` },
+      alternates: {
+        canonical: `${SITE_URL}/people/${id}`,
+      },
     };
   }
 
   const data = await res.json();
   const name = data.name ?? "Person";
-  const description = data.biography ? data.biography.slice(0, 160) : `${name} — filmography and ratings.`;
-  const image = data.profile_path ? `https://image.tmdb.org/t/p/w500${data.profile_path}` : `${SITE_URL}/person-default.png`;
+
   const canonical = `${SITE_URL}/people/${id}`;
 
   return {
     title: name,
-    description,
-    alternates: { canonical },
+    description: data.biography
+      ? data.biography.slice(0, 160)
+      : `${name} — filmography and ratings.`,
+    alternates: {
+      canonical,
+    },
     openGraph: {
       title: name,
-      description,
+      description: data.biography
+        ? data.biography.slice(0, 160)
+        : `${name} — filmography and ratings.`,
       url: canonical,
-      images: [{ url: image, width: 800, height: 800, alt: `${name}` }],
+      siteName: "Plotrend",
       type: "profile",
+      images: data.profile_path
+        ? [
+            {
+              url: `https://image.tmdb.org/t/p/w500${data.profile_path}`,
+              width: 500,
+              height: 750,
+              alt: name,
+            },
+          ]
+        : [],
     },
     twitter: {
       card: "summary_large_image",
       title: name,
-      description,
-      images: [image],
+      description: data.biography
+        ? data.biography.slice(0, 160)
+        : `${name} — filmography and ratings.`,
+      images: data.profile_path
+        ? [`https://image.tmdb.org/t/p/w500${data.profile_path}`]
+        : [],
     },
   };
 }
 
-export default async function PersonPage({ params }: { params: { id: string } }) {
+export default async function PersonPage(
+  { params }: { params: Promise<{ id: string }> }
+) {
   const { id } = await params;
 
   const res = await fetch(
@@ -64,6 +92,7 @@ export default async function PersonPage({ params }: { params: { id: string } })
     "Late Show",
     "Late Night",
     "Jimmy Kimmel",
+    "Larry Sanders",
     "Stephen Colbert",
     "Conan",
     "Golden Globe Awards",

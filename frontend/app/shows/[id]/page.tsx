@@ -14,8 +14,10 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 type Params = { id: string };
 
-export async function generateMetadata({ params }: { params: Params }) {
-  const id = params.id;
+export async function generateMetadata(
+  { params }: { params: Promise<Params> }
+) {
+  const { id } = await params;
   const show = await getTMDBShowDetails(id);
 
   const title = show.title ?? "Show";
@@ -45,7 +47,9 @@ export async function generateMetadata({ params }: { params: Params }) {
   };
 }
 
-export default async function ShowPage({ params }: { params: { id: string } }) {
+export default async function ShowPage(
+  { params }: { params: Promise<Params> }
+) {
   const { id } = await params;
   const show = await getTMDBShowDetails(id);
 
