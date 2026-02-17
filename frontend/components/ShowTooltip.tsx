@@ -25,6 +25,11 @@ export default function ShowTooltip({ show }: { show: any }) {
           <div className="mt-1 font-medium text-black">
             Rating: {show.rating ?? "N/A"}
           </div>
+          {show.role && (
+            <div className="text-xs text-gray-500 mt-1">
+              {show.role}
+            </div>
+          )}
         </div>
       </div>
     </div>

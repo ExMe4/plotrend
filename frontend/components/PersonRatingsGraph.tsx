@@ -30,6 +30,7 @@ export default function PersonRatingsGraph({ shows }: { shows: any[] }) {
     rating: s.rating ?? null,
     year: s.first_air_date ? new Date(s.first_air_date).getFullYear() : null,
     coverImageUrl: s.coverImageUrl,
+    role: s.role,
   }));
 
   const handleDotClick = useCallback(

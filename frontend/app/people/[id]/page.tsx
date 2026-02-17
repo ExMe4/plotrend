@@ -103,11 +103,56 @@ export default async function PersonPage(
     "MTV Movie & TV Awards",
   ];
 
+  const relevantCrewJobs = [
+    "Creator",
+    "Executive Producer",
+    "Producer",
+    "Writer",
+    "Screenplay",
+  ];
+
   const uniqueShowsMap = new Map();
 
+  // ACTING ROLES
   data.tv_credits?.cast?.forEach((s: any) => {
     if (!uniqueShowsMap.has(s.id)) {
-      uniqueShowsMap.set(s.id, s);
+      uniqueShowsMap.set(s.id, {
+        ...s,
+        role: "Actor",
+      });
+    }
+  });
+
+  // CREW ROLES
+  data.tv_credits?.crew?.forEach((s: any) => {
+    const isRelevant = relevantCrewJobs.includes(s.job);
+
+    if (!isRelevant) return;
+
+    const existing = uniqueShowsMap.get(s.id);
+
+    const mappedRole =
+      s.job === "Creator"
+        ? "Creator"
+        : s.job.includes("Producer")
+        ? "Producer"
+        : s.job.includes("Writer") || s.job === "Screenplay"
+        ? "Writer"
+        : s.job;
+
+    if (!existing) {
+      uniqueShowsMap.set(s.id, {
+        ...s,
+        role: mappedRole,
+      });
+    } else {
+      // Prefer non-actor roles over actor
+      if (existing.role === "Actor") {
+        uniqueShowsMap.set(s.id, {
+          ...existing,
+          role: mappedRole,
+        });
+      }
     }
   });
 
@@ -132,6 +177,7 @@ export default async function PersonPage(
           popularity: s.popularity,
           rating: s.vote_average ?? null,
           first_air_date: s.first_air_date ?? null,
+          role: s.role ?? "Actor",
           coverImageUrl: s.poster_path
           ? `https://image.tmdb.org/t/p/w500${s.poster_path}`
           : null,
