@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp, ArrowUp, ArrowDown } from "lucide-react";
 
 type Episode = {
@@ -15,6 +15,35 @@ export default function EpisodeList({ episodes }: { episodes: Episode[] }) {
   const [open, setOpen] = useState(false);
   const [sortBy, setSortBy] = useState<keyof Episode>("seasonNumber");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+
+  useEffect(() => {
+    const handleScrollToEpisode = (e: any) => {
+      const { seasonNumber, episodeNumber } = e.detail;
+
+      setOpen(true);
+
+      setTimeout(() => {
+        const el = document.getElementById(
+          `episode-${seasonNumber}-${episodeNumber}`
+        );
+
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+
+          el.classList.add("bg-yellow-50");
+          setTimeout(() => {
+            el.classList.remove("bg-yellow-50");
+          }, 2000);
+        }
+      }, 150);
+    };
+
+    window.addEventListener("scrollToEpisode", handleScrollToEpisode);
+
+    return () => {
+      window.removeEventListener("scrollToEpisode", handleScrollToEpisode);
+    };
+  }, []);
 
   const toggleSort = (field: keyof Episode) => {
     if (sortBy === field) {
@@ -86,7 +115,11 @@ export default function EpisodeList({ episodes }: { episodes: Episode[] }) {
             </thead>
             <tbody>
               {sortedEpisodes.map((ep, i) => (
-                <tr key={i} className="hover:bg-gray-50 transition">
+                <tr
+                  key={i}
+                  id={`episode-${ep.seasonNumber}-${ep.episodeNumber}`}
+                  className="hover:bg-gray-50 transition scroll-mt-32"
+                >
                   <td className="px-4 py-2 border-t border-gray-200">{ep.seasonNumber}</td>
                   <td className="px-4 py-2 border-t border-l border-gray-200">{ep.episodeNumber}</td>
                   <td className="px-4 py-2 border-t border-l border-gray-200">{ep.airDate || "N/A"}</td>

@@ -50,6 +50,41 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
   return result;
 }
 
+function EpisodeCell({ ep }: { ep: any }) {
+  const [hovered, setHovered] = useState(false);
+  const cellRef = useRef<HTMLTableCellElement>(null);
+
+  const handleClick = () => {
+    window.dispatchEvent(
+      new CustomEvent("scrollToEpisode", {
+        detail: {
+          seasonNumber: ep.seasonNumber,
+          episodeNumber: ep.episodeNumber,
+        },
+      })
+    );
+  };
+
+  return (
+    <td
+      ref={cellRef}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onClick={handleClick}
+      style={getRatingStyle(ep.rating ?? 0)}
+      className="w-12 h-12 text-xs font-bold text-center align-middle rounded relative cursor-pointer"
+    >
+      {ep.rating?.toFixed(1) ?? "N/A"}
+
+      {hovered && (
+        <TooltipPortal targetRef={cellRef}>
+          <EpisodeTooltip ep={ep} />
+        </TooltipPortal>
+      )}
+    </td>
+  );
+}
+
 export default function EpisodeGrid({ episodes }: { episodes: any[] }) {
   const seasons: { [season: number]: any[] } = {};
   for (const ep of episodes) {
@@ -96,26 +131,7 @@ export default function EpisodeGrid({ episodes }: { episodes: any[] }) {
                   const ep = chunk[i];
                   if (!ep) return <td key={i} className="w-12 h-12"></td>;
 
-                  const [hovered, setHovered] = useState(false);
-                  const cellRef = useRef<HTMLTableCellElement>(null);
-
-                  return (
-                    <td
-                      key={ep.id}
-                      ref={cellRef}
-                      onMouseEnter={() => setHovered(true)}
-                      onMouseLeave={() => setHovered(false)}
-                      style={getRatingStyle(ep.rating ?? 0)}
-                      className="w-12 h-12 text-xs font-bold text-center align-middle rounded relative group cursor-pointer"
-                    >
-                      {ep.rating?.toFixed(1) ?? "N/A"}
-                      {hovered && (
-                        <TooltipPortal targetRef={cellRef}>
-                          <EpisodeTooltip ep={ep} />
-                        </TooltipPortal>
-                      )}
-                    </td>
-                  );
+                  return <EpisodeCell key={ep.id} ep={ep} />;
                 })}
               </tr>
             ))

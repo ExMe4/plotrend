@@ -54,6 +54,17 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
   const seasonNumbers = [...new Set(sorted.map((ep) => ep.seasonNumber))];
   const { slope, intercept } = computeTrendLine(sorted);
 
+  const handleDotClick = (ep: any) => {
+    window.dispatchEvent(
+      new CustomEvent("scrollToEpisode", {
+        detail: {
+          seasonNumber: ep.seasonNumber,
+          episodeNumber: ep.episodeNumber,
+        },
+      })
+    );
+  };
+
     // Prepare data
   const data = sorted.map((ep, idx) => {
     const entry: any = {
@@ -165,19 +176,31 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
                 stroke={seasonColors[idx % seasonColors.length]}
                 strokeWidth={3}
                 isAnimationActive={false}
-                dot={{
-                  r: 5,
-                  stroke: seasonColors[idx % seasonColors.length],
-                  fill: seasonColors[idx % seasonColors.length],
-                  strokeWidth: 2,
-                  cursor: "pointer",
+                strokeOpacity={1}
+                style={{ pointerEvents: "none" }}
+                dot={(props: any) => {
+                  const { cx, cy, payload, index, value } = props;
+
+                  if (value == null) return null;
+
+                  return (
+                    <circle
+                      key={`dot-${seasonNum}-${index}`}
+                      cx={cx}
+                      cy={cy}
+                      r={6}
+                      fill={seasonColors[idx % seasonColors.length]}
+                      stroke="#fff"
+                      strokeWidth={2}
+                      style={{ cursor: "pointer", pointerEvents: "all" }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDotClick(payload);
+                      }}
+                    />
+                  );
                 }}
-                activeDot={{
-                  r: 7,
-                  stroke: seasonColors[idx % seasonColors.length],
-                  fill: seasonColors[idx % seasonColors.length],
-                  strokeWidth: 2,
-                }}
+                activeDot={false}
               />
             ))}
           </LineChart>
