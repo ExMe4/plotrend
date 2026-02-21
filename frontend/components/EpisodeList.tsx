@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ChevronDown, ChevronUp, ArrowUp, ArrowDown } from "lucide-react";
 
 type Episode = {
@@ -15,6 +15,18 @@ export default function EpisodeList({ episodes }: { episodes: Episode[] }) {
   const [open, setOpen] = useState(false);
   const [sortBy, setSortBy] = useState<keyof Episode>("seasonNumber");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsVisible(window.scrollY > 700);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const handleScrollToEpisode = (e: any) => {
@@ -33,7 +45,7 @@ export default function EpisodeList({ episodes }: { episodes: Episode[] }) {
           el.classList.add("bg-yellow-50");
           setTimeout(() => {
             el.classList.remove("bg-yellow-50");
-          }, 2000);
+          }, 8000);
         }
       }, 150);
     };
@@ -63,7 +75,7 @@ export default function EpisodeList({ episodes }: { episodes: Episode[] }) {
   });
 
   return (
-    <div className="my-8">
+    <div ref={containerRef} className="my-8">
       {/* Title + Toggle */}
       <div className="flex items-center gap-2 mb-4">
         <h2 className="text-2xl font-semibold">Episodes</h2>
@@ -80,8 +92,18 @@ export default function EpisodeList({ episodes }: { episodes: Episode[] }) {
       </div>
 
       {/* Dropdown Panel */}
-      {open && (
-        <div className="mt-4 bg-white rounded-xl shadow-lg p-4 overflow-x-auto">
+      {open && isVisible && (
+        <button
+          onClick={() => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          className="fixed top-[100px] right-6 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:shadow-xl transition cursor-pointer z-50"
+        >
+          <ArrowUp className="w-5 h-5 text-gray-700" />
+        </button>
+      )}
+        {open && (
+          <div className="mt-4 bg-white rounded-xl shadow-lg p-4 overflow-x-auto">
           <table className="w-full text-sm text-left border-collapse">
             <thead className="bg-gray-50">
               <tr>
