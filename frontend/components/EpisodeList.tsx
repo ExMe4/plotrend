@@ -103,9 +103,9 @@ export default function EpisodeList({ episodes }: { episodes: Episode[] }) {
         </button>
       )}
         {open && (
-          <div className="mt-4 bg-white rounded-xl shadow-lg p-4 overflow-x-auto">
+          <div className="mt-4 bg-white rounded-xl shadow-lg">
           <table className="w-full text-sm text-left border-collapse">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 shadow-sm">
               <tr>
                 {[
                   { key: "seasonNumber", label: "Season" },
@@ -117,9 +117,9 @@ export default function EpisodeList({ episodes }: { episodes: Episode[] }) {
                 ].map((col, idx, arr) => (
                   <th
                     key={col.key}
-                    className={`px-4 py-2 border-b border-gray-200 cursor-pointer select-none ${
+                    className={`sticky top-20 z-10 bg-gray-50 px-4 py-2 border-b border-gray-200 cursor-pointer select-none ${
                       idx > 0 ? "border-l border-gray-200" : ""
-                    } ${idx === arr.length - 1 ? "" : ""}`}
+                    }`}
                     onClick={() => toggleSort(col.key as keyof Episode)}
                   >
                     <div className="flex items-center gap-1">
