@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   // Fetch all seasons first
   const showRes = await fetch(
     `https://api.themoviedb.org/3/tv/${params.id}?api_key=${process.env.TMDB_KEY}`,

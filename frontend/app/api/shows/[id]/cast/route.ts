@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const res = await fetch(
     `https://api.themoviedb.org/3/tv/${params.id}/aggregate_credits?api_key=${process.env.TMDB_KEY}`,
     { next: { revalidate: 86400 } }
