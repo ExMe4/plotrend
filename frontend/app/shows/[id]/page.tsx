@@ -21,8 +21,7 @@ export async function generateMetadata(
   const show = await getTMDBShowDetails(id);
 
   const title = show.title ?? "Show";
-  const yearRange = show.startYear ? (show.endYear ? `${show.startYear}–${show.endYear}` : show.startYear) : "";
-  const fullTitle = `${title} `;
+  const fullTitle = `${title}`;
 
   const image = show.backdropUrl ?? show.coverImageUrl ?? `${SITE_URL}/og-default.png`;
   const canonical = `${SITE_URL}/shows/${id}`;

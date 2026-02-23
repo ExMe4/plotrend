@@ -1,8 +1,4 @@
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
 import PopularShowsClient from "@/components/PopularShowsClient";
-import { getPopularShows, getLatestEpisode } from "@/lib/api";
 
 export const metadata = {
   title: "Plotrend",

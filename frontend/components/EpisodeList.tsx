@@ -114,7 +114,7 @@ export default function EpisodeList({ episodes }: { episodes: Episode[] }) {
                   { key: "rating", label: "Rating" },
                   { key: "title", label: "Title" },
                   { key: "description", label: "Description" },
-                ].map((col, idx, arr) => (
+                ].map((col, idx) => (
                   <th
                     key={col.key}
                     className={`sticky top-20 z-10 bg-gray-50 px-4 py-2 border-b border-gray-200 cursor-pointer select-none ${

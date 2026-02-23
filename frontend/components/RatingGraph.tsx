@@ -6,7 +6,6 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  DotProps,
 } from "recharts";
 import EpisodeTooltip from "./EpisodeTooltip";
 
