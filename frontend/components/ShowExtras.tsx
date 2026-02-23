@@ -1,12 +1,18 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import RatingToggle from "./RatingToggle";
-import RatingGraph from "./RatingGraph";
+import dynamic from "next/dynamic";
 import EpisodeGrid from "./EpisodeGrid";
 import Highlights from "./Highlights";
 import CreatorsSection from "./CreatorsSection";
 import CastSection from "./CastSection";
 import EpisodeList from "./EpisodeList";
+import Spinner from "./Spinner";
+
+// Lazy load the graph
+const RatingGraph = dynamic(() => import("./RatingGraph"), {
+  ssr: false,
+});
 
 export default function ShowExtras({
   episodes,
@@ -48,7 +54,9 @@ export default function ShowExtras({
                 {view === "grid" ? (
                   <EpisodeGrid episodes={ratedEpisodes} />
                 ) : (
-                  <RatingGraph episodes={ratedEpisodes} />
+                  <Suspense fallback={<Spinner />}>
+                    <RatingGraph episodes={ratedEpisodes} />
+                  </Suspense>
                 )}
               </div>
             </>

@@ -1,8 +1,14 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import PersonRatingsGraph from "./PersonRatingsGraph";
-import { useEffect } from "react";
+import dynamic from "next/dynamic";
+import { useEffect, Suspense } from "react";
+import Spinner from "./Spinner";
+
+// Lazy load the graph
+const PersonRatingsGraph = dynamic(() => import("./PersonRatingsGraph"), {
+  ssr: false,
+});
 
 export default function PersonDetails({ person }: { person: any }) {
   useEffect(() => {
@@ -54,7 +60,11 @@ export default function PersonDetails({ person }: { person: any }) {
         </div>
 
         {/* Shows Rating Graph */}
-        <PersonRatingsGraph shows={validShows} />
+        {validShows.length > 0 && (
+          <Suspense fallback={<Spinner />}>
+            <PersonRatingsGraph shows={validShows} />
+          </Suspense>
+        )}
 
         {/* Shows Carousel */}
         {validShows.length > 0 ? (
