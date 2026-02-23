@@ -123,6 +123,7 @@ async function AsyncShowExtras({ id, show }: { id: string; show: any }) {
     <>
       <ShowDetails show={show} averageRating={averageRating} />
       <ShowExtras
+        key={id}
         episodes={episodes}
         cast={cast}
         creators={creators}

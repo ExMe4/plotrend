@@ -19,18 +19,11 @@ export default function ShowExtras({
   creators: any[];
   showOverview?: string;
 }) {
-  const [view, setView] = useState<"grid" | "graph">("grid");
-
-  useEffect(() => {
-    const saved = localStorage.getItem("ratingView") as
-      | "grid"
-      | "graph"
-      | null;
-
-    if (saved) {
-      setView(saved);
-    }
-  }, []);
+  const [view, setView] = useState<"grid" | "graph">(() => {
+    if (typeof window === "undefined") return "grid";
+    const saved = localStorage.getItem("ratingView");
+    return saved === "graph" ? "graph" : "grid";
+  });
 
   useEffect(() => {
     localStorage.setItem("ratingView", view);
