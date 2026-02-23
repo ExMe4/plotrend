@@ -44,10 +44,11 @@ export default function NavBar() {
   }, []);
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-white shadow-md px-6 py-6 relative min-h-[80px]">
-      {/* Logo */}
-      <div className="absolute left-6 top-1/2 transform -translate-y-1/2">
-        <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition">
+    <nav className="sticky top-0 z-50 w-full bg-white shadow-md px-4 md:px-6 py-4">
+      <div className="relative flex items-center mx-auto">
+
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2 shrink-0 z-10">
           <Image
             src="/logo.svg"
             alt="Plotrend Logo"
@@ -55,13 +56,25 @@ export default function NavBar() {
             height={32}
             className="object-contain"
           />
-          <h1 className="text-2xl font-bold text-blue-600">Plotrend</h1>
+          <h1 className="hidden sm:block text-2xl font-bold text-blue-600">
+            Plotrend
+          </h1>
         </Link>
-      </div>
 
-      {/* Search box */}
-      <div className="relative flex justify-center">
-        <div className="absolute left-1/2 transform -translate-x-1/2" ref={containerRef}>
+        {/* Search */}
+        <div
+          ref={containerRef}
+          className="
+            relative
+            ml-4
+            w-full
+            max-w-xs
+            sm:max-w-sm
+            md:absolute
+            md:left-1/2
+            md:-translate-x-1/2
+          "
+        >
           <div className="relative">
             <input
               type="text"
@@ -69,19 +82,17 @@ export default function NavBar() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onFocus={() => search.length > 1 && setShowDropdown(true)}
-              className="text-black border border-gray-300 rounded-lg px-4 py-2 w-96 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
+              className="w-full text-black border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
             />
 
-            {/* Spinner */}
             {loading && (
-              <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+              <div className="absolute right-2 top-1/2 -translate-y-1/2">
                 <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
               </div>
             )}
 
-            {/* Search results */}
             {showDropdown && results.length > 0 && (
-              <ul className="absolute left-0 right-0 bg-white border mt-1 rounded-lg shadow z-10 max-h-60 overflow-y-auto">
+              <ul className="absolute left-0 right-0 bg-white border mt-1 rounded-lg shadow z-20 max-h-60 overflow-y-auto">
                 {results.map((s) => (
                   <li key={s.id}>
                     <Link
@@ -92,25 +103,14 @@ export default function NavBar() {
                         setShowDropdown(false);
                       }}
                     >
-                      {s.coverImageUrl ? (
-                        <Image
-                          src={s.coverImageUrl}
-                          alt={s.title}
-                          width={32}
-                          height={48}
-                          className="rounded object-cover flex-shrink-0"
-                        />
-                      ) :
-                        <Image
-                          src="/no-image.png"
-                          alt="placeholder"
-                          width={32}
-                          height={48}
-                          className="rounded object-cover flex-shrink-0"
-                        />
-                      }
-
-                      <span className="truncate max-w-[220px]">{s.title}</span>
+                      <Image
+                        src={s.coverImageUrl || "/no-image.png"}
+                        alt={s.title}
+                        width={32}
+                        height={48}
+                        className="rounded object-cover flex-shrink-0"
+                      />
+                      <span className="truncate">{s.title}</span>
                     </Link>
                   </li>
                 ))}
@@ -118,6 +118,7 @@ export default function NavBar() {
             )}
           </div>
         </div>
+
       </div>
     </nav>
   );
