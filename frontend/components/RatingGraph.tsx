@@ -6,6 +6,7 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  DotProps,
 } from "recharts";
 import EpisodeTooltip from "./EpisodeTooltip";
 
@@ -179,9 +180,19 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
                 strokeOpacity={1}
                 style={{ pointerEvents: "none" }}
                 dot={(props: any) => {
-                  const { cx, cy, payload, index, value } = props;
+                  const { cx, cy, value, payload, index } = props;
 
-                  if (value == null) return null;
+                  if (value == null) {
+                    return (
+                      <circle
+                        key={`empty-${seasonNum}-${index}`}
+                        cx={cx}
+                        cy={cy}
+                        r={0}
+                        fill="transparent"
+                      />
+                    );
+                  }
 
                   return (
                     <circle

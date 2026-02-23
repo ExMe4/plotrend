@@ -6,7 +6,7 @@ export async function GET(
 ) {
   const { id } = await params;
   const res = await fetch(
-    `https://api.themoviedb.org/3/tv/${params.id}/aggregate_credits?api_key=${process.env.TMDB_KEY}`,
+    `https://api.themoviedb.org/3/tv/${id}/aggregate_credits?api_key=${process.env.TMDB_KEY}`,
     { next: { revalidate: 86400 } }
   );
 

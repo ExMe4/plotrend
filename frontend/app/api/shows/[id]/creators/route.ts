@@ -6,7 +6,7 @@ export async function GET(
 ) {
   const { id } = await params;
   const res = await fetch(
-    `https://api.themoviedb.org/3/tv/${params.id}?api_key=${process.env.TMDB_KEY}&language=en-US`,
+    `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.TMDB_KEY}&language=en-US`,
     { next: { revalidate: 86400 } }
   );
 

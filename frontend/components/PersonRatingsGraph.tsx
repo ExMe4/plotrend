@@ -14,6 +14,17 @@ import { useCallback } from "react";
 export default function PersonRatingsGraph({ shows }: { shows: any[] }) {
   const router = useRouter();
 
+  const handleDotClick = useCallback(
+    (dotData: any, e: any) => {
+      e?.preventDefault();
+      e?.stopPropagation();
+      if (dotData?.id) {
+        router.push(`/shows/${dotData.id}`);
+      }
+    },
+    [router]
+  );
+
   if (!shows?.length) return null;
 
   // Sort chronologically by first_air_date if available, fallback by title
@@ -32,17 +43,6 @@ export default function PersonRatingsGraph({ shows }: { shows: any[] }) {
     coverImageUrl: s.coverImageUrl,
     role: s.role,
   }));
-
-  const handleDotClick = useCallback(
-    (dotData: any, e: any) => {
-      e?.preventDefault();
-      e?.stopPropagation();
-      if (dotData?.id) {
-        router.push(`/shows/${dotData.id}`);
-      }
-    },
-    [router]
-  );
 
   return (
     <div className="w-full flex justify-center mt-10 select-none">
@@ -89,7 +89,7 @@ export default function PersonRatingsGraph({ shows }: { shows: any[] }) {
               fill="#3b82f6"
               stroke="#1d4ed8"
               strokeWidth={1}
-             shape={(props) => {
+             shape={(props: any) => {
                const {
                  payload,
                  tooltipPayload,

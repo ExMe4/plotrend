@@ -25,7 +25,7 @@ export default function Highlights({ episodes }: { episodes: Episode[] }) {
   );
 
   // Group by season
-  const grouped = episodes.reduce((acc: any, ep) => {
+  const grouped = episodes.reduce<Record<number, Episode[]>>((acc, ep) => {
     if (ep.rating) {
       if (!acc[ep.seasonNumber]) acc[ep.seasonNumber] = [];
       acc[ep.seasonNumber].push(ep);
@@ -34,7 +34,8 @@ export default function Highlights({ episodes }: { episodes: Episode[] }) {
   }, {});
 
   const seasons = Object.keys(grouped).map((s) => {
-    const eps = grouped[s];
+    const seasonNumber = Number(s);
+    const eps = grouped[seasonNumber];
     const avg = eps.reduce((sum, ep) => sum + ep.rating, 0) / eps.length;
 
     const firstYear = eps[0].airDate

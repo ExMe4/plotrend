@@ -29,6 +29,7 @@ export async function getTMDBShowDetails(id: string | number) {
     backdropUrl: show.backdrop_path ? `${IMG}${show.backdrop_path}` : null,
     rating: show.vote_average ? show.vote_average.toFixed(1) : null,
     popularity: show.popularity,
+    vote_count: show.vote_count ?? null,
     startYear: show.first_air_date ? show.first_air_date.slice(0, 4) : null,
     endYear: show.last_air_date ? show.last_air_date.slice(0, 4) : null,
     status: show.status,

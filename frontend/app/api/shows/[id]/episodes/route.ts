@@ -7,7 +7,7 @@ export async function GET(
   const { id } = await params;
   // Fetch all seasons first
   const showRes = await fetch(
-    `https://api.themoviedb.org/3/tv/${params.id}?api_key=${process.env.TMDB_KEY}`,
+    `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.TMDB_KEY}`,
     { next: { revalidate: 86400 } }
   );
 
@@ -26,7 +26,7 @@ export async function GET(
   // For each valid season, fetch its episodes
   const seasonRequests = validSeasons.map((s: any) =>
     fetch(
-      `https://api.themoviedb.org/3/tv/${params.id}/season/${s.season_number}?api_key=${process.env.TMDB_KEY}`,
+      `https://api.themoviedb.org/3/tv/${id}/season/${s.season_number}?api_key=${process.env.TMDB_KEY}`,
       { next: { revalidate: 86400 } }
     ).then((res) => res.json())
   );

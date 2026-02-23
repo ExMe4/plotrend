@@ -5,19 +5,41 @@ import Link from "next/link";
 import Image from "next/image";
 import { getPopularShows, getLatestEpisode } from "@/lib/api";
 
+type Show = {
+  id: number;
+  name: string;
+  poster_path: string | null;
+  vote_average: number;
+  first_air_date: string | null;
+};
+
+type Episode = {
+  id: number;
+  name: string;
+  air_date: string | null;
+};
+
 export default function PopularShowsClient() {
-  const [popular, setPopular] = useState([]);
-  const [latestEpisodes, setLatestEpisodes] = useState({});
+  const [popular, setPopular] = useState<Show[]>([]);
+  const [latestEpisodes, setLatestEpisodes] = useState<
+    Record<number, Episode | undefined>
+  >({});
 
   useEffect(() => {
     async function loadData() {
-      const pop = await getPopularShows();
+      const pop: Show[] = await getPopularShows();
       setPopular(pop);
 
-      for (const show of pop) {
-        const ep = await getLatestEpisode(show.id);
-        setLatestEpisodes((prev) => ({ ...prev, [show.id]: ep }));
-      }
+      const episodes = await Promise.all(
+        pop.map((show) => getLatestEpisode(show.id))
+      );
+
+      const latestMap: Record<number, Episode | undefined> = {};
+      pop.forEach((show, i) => {
+        latestMap[show.id] = episodes[i];
+      });
+
+      setLatestEpisodes(latestMap);
     }
 
     loadData();

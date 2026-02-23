@@ -6,11 +6,11 @@ import PersonRatingsGraph from "./PersonRatingsGraph";
 import { useEffect } from "react";
 
 export default function PersonDetails({ person }: { person: any }) {
-  if (!person) return <p className="p-6">Person not found.</p>;
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+
+  if (!person) return <p className="p-6">Person not found.</p>;
 
   const validShows =
     person.shows?.filter(
