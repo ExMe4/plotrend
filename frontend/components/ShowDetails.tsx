@@ -50,7 +50,7 @@ export default function ShowDetails({
 
           {/* Info + Ratings */}
           <div className="flex flex-col md:flex-row justify-between w-full">
-            {/* Left: Main info */}
+            {/* Main info */}
             <div>
               <h1 className="text-3xl font-bold mb-2">{show.title}</h1>
 
@@ -111,7 +111,7 @@ export default function ShowDetails({
             </div>
 
             {/* Ratings */}
-            <div className="flex gap-10 md:ml-auto mt-4 md:mt-0 items-center">
+            <div className="flex gap-10 md:ml-auto mt-4 md:mt-0 items-right">
               {/* Popularity */}
               <div className="text-center">
                 <div
