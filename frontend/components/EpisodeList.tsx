@@ -104,56 +104,58 @@ export default function EpisodeList({ episodes }: { episodes: Episode[] }) {
       )}
         {open && (
           <div className="mt-4 bg-white rounded-xl shadow-lg">
-          <table className="w-full text-sm text-left border-collapse">
-            <thead className="bg-gray-50 shadow-sm">
-              <tr>
-                {[
-                  { key: "seasonNumber", label: "Season" },
-                  { key: "episodeNumber", label: "Episode" },
-                  { key: "airDate", label: "Air Date" },
-                  { key: "rating", label: "Rating" },
-                  { key: "title", label: "Title" },
-                  { key: "description", label: "Description" },
-                ].map((col, idx) => (
-                  <th
-                    key={col.key}
-                    className={`sticky top-20 z-10 bg-gray-50 px-4 py-2 border-b border-gray-200 cursor-pointer select-none ${
-                      idx > 0 ? "border-l border-gray-200" : ""
-                    }`}
-                    onClick={() => toggleSort(col.key as keyof Episode)}
-                  >
-                    <div className="flex items-center gap-1">
-                      {col.label}
-                      {sortBy === col.key &&
-                        (sortOrder === "asc" ? (
-                          <ArrowUp className="w-3 h-3" />
-                        ) : (
-                          <ArrowDown className="w-3 h-3" />
-                        ))}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {sortedEpisodes.map((ep, i) => (
-                <tr
-                  key={i}
-                  id={`episode-${ep.seasonNumber}-${ep.episodeNumber}`}
-                  className="hover:bg-gray-50 transition scroll-mt-32"
-                >
-                  <td className="px-4 py-2 border-t border-gray-200">{ep.seasonNumber}</td>
-                  <td className="px-4 py-2 border-t border-l border-gray-200">{ep.episodeNumber}</td>
-                  <td className="px-4 py-2 border-t border-l border-gray-200">{ep.airDate || "N/A"}</td>
-                  <td className="px-4 py-2 border-t border-l border-gray-200">{ep.rating ?? "N/A"}</td>
-                  <td className="px-4 py-2 border-t border-l border-gray-200">{ep.title}</td>
-                  <td className="px-4 py-2 border-t border-l border-gray-200 max-w-[500px]">
-                    <p className="line-clamp-3">{ep.description || "—"}</p>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+            <div className="overflow-x-auto md:overflow-visible">
+              <table className="w-full text-sm text-left border-collapse">
+                <thead className="bg-gray-50 shadow-sm">
+                  <tr>
+                    {[
+                      { key: "seasonNumber", label: "Season" },
+                      { key: "episodeNumber", label: "Episode" },
+                      { key: "airDate", label: "Air Date" },
+                      { key: "rating", label: "Rating" },
+                      { key: "title", label: "Title" },
+                      { key: "description", label: "Description" },
+                    ].map((col, idx) => (
+                      <th
+                        key={col.key}
+                        className={`md:sticky top-16 z-10 bg-gray-50 px-4 py-2 border-b border-gray-200 cursor-pointer select-none ${
+                          idx > 0 ? "border-l border-gray-200" : ""
+                        }`}
+                        onClick={() => toggleSort(col.key as keyof Episode)}
+                      >
+                        <div className="flex items-center gap-1">
+                          {col.label}
+                          {sortBy === col.key &&
+                            (sortOrder === "asc" ? (
+                              <ArrowUp className="w-3 h-3" />
+                            ) : (
+                              <ArrowDown className="w-3 h-3" />
+                            ))}
+                        </div>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedEpisodes.map((ep, i) => (
+                    <tr
+                      key={i}
+                      id={`episode-${ep.seasonNumber}-${ep.episodeNumber}`}
+                      className="hover:bg-gray-50 transition scroll-mt-32"
+                    >
+                      <td className="px-4 py-2 border-t border-gray-200">{ep.seasonNumber}</td>
+                      <td className="px-4 py-2 border-t border-l border-gray-200">{ep.episodeNumber}</td>
+                      <td className="px-4 py-2 border-t border-l border-gray-200">{ep.airDate || "N/A"}</td>
+                      <td className="px-4 py-2 border-t border-l border-gray-200">{ep.rating ?? "N/A"}</td>
+                      <td className="px-4 py-2 border-t border-l border-gray-200">{ep.title}</td>
+                      <td className="px-4 py-2 border-t border-l border-gray-200 max-w-[500px]">
+                        <p className="line-clamp-3">{ep.description || "—"}</p>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
         </div>
       )}
     </div>
