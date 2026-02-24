@@ -111,11 +111,11 @@ export default function ShowDetails({
             </div>
 
             {/* Ratings */}
-            <div className="flex gap-10 md:ml-auto mt-4 md:mt-0 items-right">
+            <div className="flex flex-row gap-6 md:gap-10 md:ml-auto mt-4 md:mt-0 justify-between">
               {/* Popularity */}
               <div className="text-center">
                 <div
-                  className={`pt-6 text-[5.5rem] leading-none font-bold tracking-tighter scale-y-[1.3] scale-x-[0.8] origin-bottom ${getPopularityStyle(
+                  className={`pt-6 text-[4rem] sm:text-[4.5rem] md:text-[5.5rem] leading-none font-bold tracking-tighter scale-y-[1.3] scale-x-[0.8] origin-bottom ${getPopularityStyle(
                     Math.round(show.popularity)
                   )}`}
                 >
@@ -139,7 +139,7 @@ export default function ShowDetails({
               {/* TMDB Rating */}
               <div className="text-center">
                 <div className="relative inline-block">
-                  <div className="pt-6 text-[5.5rem] leading-none font-bold text-black tracking-tighter scale-y-[1.3] scale-x-[0.8] origin-bottom">
+                  <div className="pt-6 text-[4rem] sm:text-[4.5rem] md:text-[5.5rem] leading-none font-bold text-black tracking-tighter scale-y-[1.3] scale-x-[0.8] origin-bottom">
                     {show.rating || "N/A"}
                   </div>
                   {show.rating && (
@@ -156,7 +156,7 @@ export default function ShowDetails({
                 <div className="text-center">
                   <div className="relative inline-block">
                     <div
-                      className={`pt-6 text-[5.5rem] leading-none font-bold tracking-tighter scale-y-[1.3] scale-x-[0.8] origin-bottom ${getAERStyle(
+                      className={`pt-6 text-[4rem] sm:text-[4.5rem] md:text-[5.5rem] leading-none font-bold tracking-tighter scale-y-[1.3] scale-x-[0.8] origin-bottom ${getAERStyle(
                         Number(averageRating)
                       )}`}
                     >
