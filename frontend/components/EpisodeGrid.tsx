@@ -103,7 +103,7 @@ export default function EpisodeGrid({ episodes }: { episodes: any[] }) {
   }
 
   return (
-    <div className="overflow-auto flex justify-center">
+    <div className="w-full overflow-x-auto overflow-y-hidden">
       <table className="table-fixed border-separate border-spacing-1">
         <thead>
           <tr>

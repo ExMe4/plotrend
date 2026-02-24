@@ -104,8 +104,8 @@ export default function RatingGraph({ episodes }: { episodes: any[] }) {
   });
 
   return (
-    <div className="w-full flex justify-center">
-      <div className="w-[1600px] h-[600px]">
+    <div className="w-full overflow-x-auto">
+      <div className="min-w-[900px] md:min-w-0 h-[400px] md:h-[600px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={data}
