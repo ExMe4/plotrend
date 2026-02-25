@@ -97,112 +97,126 @@ export default function Highlights({ episodes }: { episodes: Episode[] }) {
       <h2 className="text-2xl font-semibold mb-6">Highlights</h2>
       <div className="flex flex-col gap-4">
         {/* Best Episode */}
-        <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
-          <div className="bg-purple-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
-            Best Episode
-          </div>
-          <div className="bg-purple-100 text-purple-800 px-4 py-3 flex-1">
-            <span className="font-semibold">
-              S{bestEp.seasonNumber}E{bestEp.episodeNumber} - {bestEp.title}
-            </span>
-            <span className="ml-2">({bestEp.rating.toFixed(1)}/10)</span>
-            <div className="text-sm text-purple-600 mt-1">{bestEp.airDate}</div>
-          </div>
-        </div>
+        <div className="overflow-x-auto -mx-6 px-6">
+            <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
+              <div className="bg-purple-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
+                Best Episode
+              </div>
+              <div className="bg-purple-100 text-purple-800 px-4 py-3 flex-1">
+                <span className="font-semibold">
+                  S{bestEp.seasonNumber}E{bestEp.episodeNumber} - {bestEp.title}
+                </span>
+                <span className="ml-2">({bestEp.rating.toFixed(1)}/10)</span>
+                <div className="text-sm text-purple-600 mt-1">{bestEp.airDate}</div>
+              </div>
+            </div>
+         </div>
 
         {/* Worst Episode */}
-        <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
-          <div className="bg-red-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
-            Worst Episode
-          </div>
-          <div className="bg-red-100 text-red-800 px-4 py-3 flex-1">
-            <span className="font-semibold">
-              S{worstEp.seasonNumber}E{worstEp.episodeNumber} - {worstEp.title}
-            </span>
-            <span className="ml-2">({worstEp.rating.toFixed(1)}/10)</span>
-            <div className="text-sm text-red-600 mt-1">{worstEp.airDate}</div>
-          </div>
-        </div>
+        <div className="overflow-x-auto -mx-6 px-6">
+            <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
+              <div className="bg-red-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
+                Worst Episode
+              </div>
+              <div className="bg-red-100 text-red-800 px-4 py-3 flex-1">
+                <span className="font-semibold">
+                  S{worstEp.seasonNumber}E{worstEp.episodeNumber} - {worstEp.title}
+                </span>
+                <span className="ml-2">({worstEp.rating.toFixed(1)}/10)</span>
+                <div className="text-sm text-red-600 mt-1">{worstEp.airDate}</div>
+              </div>
+            </div>
+         </div>
 
         {/* Best & Worst Season */}
         {bestSeason && worstSeason && (
           <>
-            <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
-              <div className="bg-green-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
-                Best Season
-              </div>
-              <div className="bg-green-100 text-green-800 px-4 py-3 flex-1">
-                <span className="font-semibold">Season {bestSeason.season}</span>
-                <span className="ml-2">({bestSeason.avg.toFixed(2)}/10)</span>
-                {bestSeason.yearLabel && (
-                  <div className="text-sm text-green-600 mt-1">
-                    {bestSeason.yearLabel}
+            <div className="overflow-x-auto -mx-6 px-6">
+                <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
+                  <div className="bg-green-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
+                    Best Season
                   </div>
-                )}
-              </div>
-            </div>
+                  <div className="bg-green-100 text-green-800 px-4 py-3 flex-1">
+                    <span className="font-semibold">Season {bestSeason.season}</span>
+                    <span className="ml-2">({bestSeason.avg.toFixed(2)}/10)</span>
+                    {bestSeason.yearLabel && (
+                      <div className="text-sm text-green-600 mt-1">
+                        {bestSeason.yearLabel}
+                      </div>
+                    )}
+                  </div>
+                </div>
+             </div>
 
-            <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
-              <div className="bg-red-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
-                Worst Season
-              </div>
-              <div className="bg-red-100 text-red-800 px-4 py-3 flex-1">
-                <span className="font-semibold">
-                  Season {worstSeason.season}
-                </span>
-                <span className="ml-2">({worstSeason.avg.toFixed(2)}/10)</span>
-                {worstSeason.yearLabel && (
-                  <div className="text-sm text-red-600 mt-1">
-                    {worstSeason.yearLabel}
+            <div className="overflow-x-auto -mx-6 px-6">
+                <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
+                  <div className="bg-red-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
+                    Worst Season
                   </div>
-                )}
+                  <div className="bg-red-100 text-red-800 px-4 py-3 flex-1">
+                    <span className="font-semibold">
+                      Season {worstSeason.season}
+                    </span>
+                    <span className="ml-2">({worstSeason.avg.toFixed(2)}/10)</span>
+                    {worstSeason.yearLabel && (
+                      <div className="text-sm text-red-600 mt-1">
+                        {worstSeason.yearLabel}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
           </>
         )}
 
         {/* Top 5  */}
         {top5.length > 0 && (
-          <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
-            <div
-              className="px-4 py-3 font-bold min-w-[140px] flex items-center"
-              style={{ backgroundColor: "#FFD700", color: "#4a3500" }}
-            >
-              Top 5
+          <div className="overflow-x-auto -mx-6 px-6">
+              <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
+                <div
+                  className="px-4 py-3 font-bold min-w-[140px] flex items-center"
+                  style={{ backgroundColor: "#FFD700", color: "#4a3500" }}
+                >
+                  Top 5
+                </div>
+                <div className="bg-yellow-50 text-yellow-900 px-4 py-3 flex-1 flex gap-3 flex-wrap">
+                  {top5.map((ep) => (
+                    <EpisodeBox key={ep.id} ep={ep} />
+                  ))}
+                </div>
+              </div>
             </div>
-            <div className="bg-yellow-50 text-yellow-900 px-4 py-3 flex-1 flex gap-3 flex-wrap">
-              {top5.map((ep) => (
-                <EpisodeBox key={ep.id} ep={ep} />
-              ))}
-            </div>
-          </div>
         )}
 
         {/* Best/Worst Run */}
         {bestRun && (
-          <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
-            <div className="bg-green-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
-              Best Run
+          <div className="overflow-x-auto -mx-6 px-6">
+              <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
+                <div className="bg-green-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
+                  Best Run
+                </div>
+                <div className="bg-green-100 text-green-800 px-4 py-3 flex-1 flex gap-3 flex-wrap">
+                  {bestRun.eps.map((ep: Episode) => (
+                    <EpisodeBox key={ep.id} ep={ep} />
+                  ))}
+                </div>
+              </div>
             </div>
-            <div className="bg-green-100 text-green-800 px-4 py-3 flex-1 flex gap-3 flex-wrap">
-              {bestRun.eps.map((ep: Episode) => (
-                <EpisodeBox key={ep.id} ep={ep} />
-              ))}
-            </div>
-          </div>
         )}
 
         {worstRun && (
-          <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
-            <div className="bg-red-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
-              Worst Run
+          <div className="overflow-x-auto -mx-6 px-6">
+              <div className="flex overflow-hidden rounded-2xl shadow-lg text-white">
+                <div className="bg-red-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
+                  Worst Run
+                </div>
+                <div className="bg-red-100 text-red-800 px-4 py-3 flex-1 flex gap-3 flex-wrap">
+                  {worstRun.eps.map((ep: Episode) => (
+                    <EpisodeBox key={ep.id} ep={ep} />
+                  ))}
+                </div>
+              </div>
             </div>
-            <div className="bg-red-100 text-red-800 px-4 py-3 flex-1 flex gap-3 flex-wrap">
-              {worstRun.eps.map((ep: Episode) => (
-                <EpisodeBox key={ep.id} ep={ep} />
-              ))}
-            </div>
-          </div>
         )}
       </div>
     </div>

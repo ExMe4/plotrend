@@ -50,7 +50,7 @@ export default function ShowExtras({
           {hasRatedEpisodes ? (
             <>
               <RatingToggle view={view} setView={setView} />
-              <div className="mt-6 -mx-6">
+              <div className="mt-6 md:-mx-6">
                 {view === "grid" ? (
                   <EpisodeGrid episodes={ratedEpisodes} />
                 ) : (
