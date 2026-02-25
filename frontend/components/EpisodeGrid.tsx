@@ -104,7 +104,7 @@ export default function EpisodeGrid({ episodes }: { episodes: any[] }) {
 
   return (
     <div className="w-full overflow-x-auto overflow-y-hidden">
-      <table className="table-fixed border-separate border-spacing-1">
+      <table className="table-fixed border-separate border-spacing-1 mx-auto">
         <thead>
           <tr>
             <th className="w-16"></th>
