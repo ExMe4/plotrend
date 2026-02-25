@@ -1,13 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params;
+  const { id } = await context.params;
+
   const res = await fetch(
     `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.TMDB_KEY}&append_to_response=aggregate_credits`,
-    { next: { revalidate: 86400 } } // cache for 1 day
+    { next: { revalidate: 86400 } }
   );
 
   if (!res.ok) {
@@ -15,6 +16,7 @@ export async function GET(
   }
 
   const data = await res.json();
+
   return NextResponse.json({
     id: data.id,
     title: data.name,
