@@ -81,8 +81,22 @@ export default function Highlights({ episodes }: { episodes: Episode[] }) {
     }
   }
 
+  const scrollToEpisode = (ep: Episode) => {
+    window.dispatchEvent(
+      new CustomEvent("scrollToEpisode", {
+        detail: {
+          seasonNumber: ep.seasonNumber,
+          episodeNumber: ep.episodeNumber,
+        },
+      })
+    );
+  };
+
   const EpisodeBox = ({ ep }: { ep: Episode }) => (
-    <div className="bg-white rounded-lg shadow p-2 w-32 flex-shrink-0">
+    <div
+      onClick={() => scrollToEpisode(ep)}
+      className="bg-white rounded-lg shadow p-2 w-32 flex-shrink-0 cursor-pointer hover:scale-105 transition"
+    >
       <div className="text-[10px] font-semibold text-gray-600 mb-1">
         S{ep.seasonNumber}E{ep.episodeNumber}
       </div>
@@ -102,7 +116,10 @@ export default function Highlights({ episodes }: { episodes: Episode[] }) {
               <div className="bg-purple-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
                 Best Episode
               </div>
-              <div className="bg-purple-100 text-purple-800 px-4 py-3 flex-1">
+              <div
+                onClick={() => scrollToEpisode(bestEp)}
+                className="bg-purple-100 text-purple-800 px-4 py-3 flex-1 cursor-pointer hover:bg-purple-200 transition"
+              >
                 <span className="font-semibold">
                   S{bestEp.seasonNumber}E{bestEp.episodeNumber} - {bestEp.title}
                 </span>
@@ -118,7 +135,10 @@ export default function Highlights({ episodes }: { episodes: Episode[] }) {
               <div className="bg-red-700 px-4 py-3 font-bold min-w-[140px] flex items-center">
                 Worst Episode
               </div>
-              <div className="bg-red-100 text-red-800 px-4 py-3 flex-1">
+              <div
+                onClick={() => scrollToEpisode(worstEp)}
+                className="bg-red-100 text-red-800 px-4 py-3 flex-1 cursor-pointer hover:bg-red-200 transition"
+              >
                 <span className="font-semibold">
                   S{worstEp.seasonNumber}E{worstEp.episodeNumber} - {worstEp.title}
                 </span>
