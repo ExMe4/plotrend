@@ -74,6 +74,40 @@ export default function EpisodeList({ episodes }: { episodes: Episode[] }) {
     return 0;
   });
 
+  const DescriptionCell = ({ text }: { text?: string }) => {
+    const [isTruncated, setIsTruncated] = useState(false);
+    const [hovered, setHovered] = useState(false);
+    const textRef = useRef<HTMLParagraphElement>(null);
+
+    useEffect(() => {
+      const el = textRef.current;
+      if (!el) return;
+
+      // Detect truncation
+      setIsTruncated(el.scrollHeight > el.clientHeight);
+    }, [text]);
+
+    if (!text) return <p>—</p>;
+
+    return (
+      <div
+        className="relative"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        <p ref={textRef} className="line-clamp-3">
+          {text}
+        </p>
+
+        {hovered && isTruncated && (
+          <div className="absolute z-50 top-full left-0 mt-2 w-[400px] max-w-[90vw] bg-white shadow-xl rounded-lg p-3 text-sm text-gray-800 border border-gray-200">
+            {text}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div ref={containerRef} className="my-8">
       {/* Title + Toggle */}
@@ -149,7 +183,7 @@ export default function EpisodeList({ episodes }: { episodes: Episode[] }) {
                       <td className="px-4 py-2 border-t border-l border-gray-200">{ep.rating ?? "N/A"}</td>
                       <td className="px-4 py-2 border-t border-l border-gray-200">{ep.title}</td>
                       <td className="px-4 py-2 border-t border-l border-gray-200 max-w-[500px]">
-                        <p className="line-clamp-3">{ep.description || "—"}</p>
+                        <DescriptionCell text={ep.description} />
                       </td>
                     </tr>
                   ))}
